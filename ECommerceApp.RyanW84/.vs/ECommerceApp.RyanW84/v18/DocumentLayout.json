@@ -3,8 +3,27 @@
   "WorkspaceRootPath": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\ecommerceapp.ryanw84\\ecommerceapp.ryanw84\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|solutionrelative:ecommerceapp.ryanw84\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\ecommerceapp.ryanw84\\ecommerceapp.ryanw84\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|solutionrelative:ecommerceapp.ryanw84\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\ecommerceapp.ryanw84\\ecommerceapp.ryanw84\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|solutionrelative:ecommerceapp.ryanw84\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\ecommerceapp.ryanw84\\ecommerceapp.ryanw84\\data\\ecommercedbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|solutionrelative:ecommerceapp.ryanw84\\data\\ecommercedbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\ecommerceapp.ryanw84\\ecommerceapp.ryanw84\\data\\models\\salessummary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|solutionrelative:ecommerceapp.ryanw84\\data\\models\\salessummary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ryanw\\AppData\\Roaming\\Microsoft\\UserSecrets\\8e5eb53c-47d0-496a-ab08-31f12efd064f\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\ecommerceapp.ryanw84\\ecommerceapp.ryanw84\\data\\models\\sale.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -17,9 +36,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\ecommerceapp.ryanw84\\ecommerceapp.ryanw84\\data\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84\\ECommerceApp.RyanW84.csproj|solutionrelative:ecommerceapp.ryanw84\\data\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ryanw\\AppData\\Roaming\\Microsoft\\UserSecrets\\8e5eb53c-47d0-496a-ab08-31f12efd064f\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -29,7 +45,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,6 +62,58 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "CategoryService.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Services\\CategoryService.cs",
+              "RelativeDocumentMoniker": "ECommerceApp.RyanW84\\Services\\CategoryService.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Services\\CategoryService.cs",
+              "RelativeToolTip": "ECommerceApp.RyanW84\\Services\\CategoryService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-15T20:17:14.484Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ProductService.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Services\\ProductService.cs",
+              "RelativeDocumentMoniker": "ECommerceApp.RyanW84\\Services\\ProductService.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Services\\ProductService.cs",
+              "RelativeToolTip": "ECommerceApp.RyanW84\\Services\\ProductService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-15T20:16:53.322Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Program.cs",
+              "RelativeDocumentMoniker": "ECommerceApp.RyanW84\\Program.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Program.cs",
+              "RelativeToolTip": "ECommerceApp.RyanW84\\Program.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAuwB8AAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-15T20:12:42.692Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SalesSummary.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Data\\Models\\SalesSummary.cs",
+              "RelativeDocumentMoniker": "ECommerceApp.RyanW84\\Data\\Models\\SalesSummary.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Data\\Models\\SalesSummary.cs",
+              "RelativeToolTip": "ECommerceApp.RyanW84\\Data\\Models\\SalesSummary.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-15T19:57:20.35Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "Sale.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Data\\Models\\Sale.cs",
               "RelativeDocumentMoniker": "ECommerceApp.RyanW84\\Data\\Models\\Sale.cs",
@@ -53,12 +121,12 @@
               "RelativeToolTip": "ECommerceApp.RyanW84\\Data\\Models\\Sale.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAA/wBcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-15T19:05:29.971Z",
+              "WhenOpened": "2025-09-15T19:46:36.446Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "Category.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Data\\Models\\Category.cs",
               "RelativeDocumentMoniker": "ECommerceApp.RyanW84\\Data\\Models\\Category.cs",
@@ -66,12 +134,12 @@
               "RelativeToolTip": "ECommerceApp.RyanW84\\Data\\Models\\Category.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-15T19:05:21.92Z",
+              "WhenOpened": "2025-09-15T19:46:36.492Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "Product.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Data\\Models\\Product.cs",
               "RelativeDocumentMoniker": "ECommerceApp.RyanW84\\Data\\Models\\Product.cs",
@@ -79,25 +147,25 @@
               "RelativeToolTip": "ECommerceApp.RyanW84\\Data\\Models\\Product.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-15T19:05:11.607Z",
+              "WhenOpened": "2025-09-15T19:46:36.495Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "ECommerceDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Data\\ECommerceDbContext.cs",
               "RelativeDocumentMoniker": "ECommerceApp.RyanW84\\Data\\ECommerceDbContext.cs",
               "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84\\ECommerceApp.RyanW84\\Data\\ECommerceDbContext.cs",
               "RelativeToolTip": "ECommerceApp.RyanW84\\Data\\ECommerceDbContext.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAgwFcAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAMMAAAAAAAAAAAAywNAAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-15T19:04:47.532Z",
+              "WhenOpened": "2025-09-15T19:46:36.498Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "secrets.json",
               "DocumentMoniker": "C:\\Users\\Ryanw\\AppData\\Roaming\\Microsoft\\UserSecrets\\8e5eb53c-47d0-496a-ab08-31f12efd064f\\secrets.json",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Roaming\\Microsoft\\UserSecrets\\8e5eb53c-47d0-496a-ab08-31f12efd064f\\secrets.json",
