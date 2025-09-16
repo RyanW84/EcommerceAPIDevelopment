@@ -1,13 +1,11 @@
 ﻿using ECommerceApp.RyanW84.Data.Models;
+using ECommerceApp.RyanW84.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.RyanW84.Data;
 
-public class ECommerceDbContext : DbContext
+public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : DbContext(options)
 {
-    public ECommerceDbContext(DbContextOptions<ECommerceDbContext> options)
-        : base(options) { }
-
     // DbSets for the entities
     public DbSet<Models.Product> Products { get; set; } = null!;
     public DbSet<Models.Category> Categories { get; set; } = null!;
@@ -19,7 +17,7 @@ public class ECommerceDbContext : DbContext
 
         modelBuilder.Entity<Models.Product>(entity =>
         {
-            entity.HasKey(p => p.Id);
+            entity.HasKey(p => p.ProductId);
             entity.Property(p => p.Name).IsRequired().HasMaxLength(100);
             entity.Property(p => p.Description).IsRequired().HasMaxLength(500);
             entity.Property(p => p.Price).IsRequired().HasPrecision(18, 2);
@@ -39,9 +37,6 @@ public class ECommerceDbContext : DbContext
                 .WithOne(s => s.Product)
                 .HasForeignKey(s => s.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // Global filter to exclude inactive products
-            entity.HasQueryFilter(p => p.IsActive);
         });
 
         modelBuilder.Entity<Models.Category>(entity =>
@@ -85,79 +80,83 @@ public class ECommerceDbContext : DbContext
                 .HasForeignKey(s => s.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+    }
 
+    public void SeedData()
+    {
         // Seed initial Categories
-        modelBuilder
-            .Entity<Models.Category>()
-            .HasData(
-                new Models.Category
-                {
-                    CategoryId = 1,
-                    Name = "Electronics",
-                    Description = "Electronic gadgets and devices",
-                },
-                new Models.Category
-                {
-                    CategoryId = 2,
-                    Name = "Books",
-                    Description = "Various kinds of books",
-                },
-                new Models.Category
-                {
-                    CategoryId = 3,
-                    Name = "Clothing",
-                    Description = "Apparel and accessories",
-                }
-            );
+        Categories.RemoveRange(Categories);
+        Products.RemoveRange(Products);
+        Sales.RemoveRange(Sales);
+
+        Category Electronics = new()
+        {
+            CategoryId = 1,
+            Name = "Electronics",
+            Description = "Electronic gadgets and devices",
+        };
+        Category Books = new()
+        {
+            CategoryId = 2,
+            Name = "Books",
+            Description = "Various kinds of books",
+        };
+        Category Clothing = new()
+        {
+            CategoryId = 3,
+            Name = "Clothing",
+            Description = "Apparel and accessories",
+        };
+
+        Categories.AddRange(Electronics, Books, Clothing);
 
         // Seed initial Products
-        modelBuilder
-            .Entity<Models.Product>()
-            .HasData(
-                new Models.Product
-                {
-                    Id = 1,
-                    Name = "Smartphone",
-                    Description = "Latest model smartphone",
-                    Price = 699.99m,
-                    Stock = 50,
-                    IsActive = true,
-                    CategoryId = 1,
-                },
-                new Models.Product
-                {
-                    Id = 2,
-                    Name = "Laptop",
-                    Description = "High performance laptop",
-                    Price = 1299.99m,
-                    Stock = 30,
-                    IsActive = true,
-                    CategoryId = 1,
-                },
-                new Models.Product
-                {
-                    Id = 3,
-                    Name = "Novel",
-                    Description = "Bestselling fiction novel",
-                    Price = 19.99m,
-                    Stock = 100,
-                    IsActive = true,
-                    CategoryId = 2,
-                },
-                new Models.Product
-                {
-                    Id = 4,
-                    Name = "T-Shirt",
-                    Description = "100% cotton t-shirt",
-                    Price = 9.99m,
-                    Stock = 200,
-                    IsActive = true,
-                    CategoryId = 3,
-                }
-            );
+        Product product1 = new()
+        {
+            ProductId = 1,
+            Name = "Smartphone",
+            Description = "Latest model smartphone",
+            Price = 699.99m,
+            Stock = 50,
+            IsActive = true,
+            CategoryId = 1,
+        };
+        Product product2 = new()
+        {
+            ProductId = 2,
+            Name = "Laptop",
+            Description = "High performance laptop",
+            Price = 1299.99m,
+            Stock = 30,
+            IsActive = true,
+            CategoryId = 1,
+        };
+        Product product3 = new()
+        {
+            ProductId = 3,
+            Name = "Novel",
+            Description = "Bestselling fiction novel",
+            Price = 19.99m,
+            Stock = 100,
+            IsActive = true,
+            CategoryId = 2,
+        };
+        Product product4 = new()
+        {
+            ProductId = 4,
+            Name = "T-Shirt",
+            Description = "100% cotton t-shirt",
+            Price = 9.99m,
+            Stock = 200,
+            IsActive = true,
+            CategoryId = 3,
+        };
 
-        // Note: Sales are typically not seeded as they are transactional data
+        Products.AddRange(product1, product2, product3, product4);
     }
+
+    // Note: Sales are typically not seeded as they are transactional data
+
 
     public override int SaveChanges()
     {
@@ -172,7 +171,7 @@ public class ECommerceDbContext : DbContext
     }
 
     // Soft-delete handler: checks for an "IsActive" property and optional "DeletedAt" and sets them instead of removing
-    private void HandleSoftDelete()
+    private async void HandleSoftDelete()
     {
         var softDeleteEntries = ChangeTracker
             .Entries()
@@ -196,7 +195,7 @@ public class ECommerceDbContext : DbContext
 
             var deletedAtProp = entity.GetType().GetProperty("DeletedAt");
             if (
-                deletedAtProp != null
+                deletedAtProp is not null
                 && deletedAtProp.CanWrite
                 && (
                     deletedAtProp.PropertyType == typeof(DateTime)

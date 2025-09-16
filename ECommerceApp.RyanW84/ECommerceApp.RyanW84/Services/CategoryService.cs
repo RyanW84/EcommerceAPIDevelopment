@@ -1,8 +1,11 @@
-﻿namespace ECommerceApp.RyanW84.Services;
+﻿using ECommerceApp.RyanW84.Data;
+using ECommerceApp.RyanW84.Interfaces;
 
-public class CategoryService
+namespace ECommerceApp.RyanW84.Services;
+
+public class CategoryService(ECommerceDbContext db) : ICategoryService
 {
-    public CategoryService() { }
+    private readonly ECommerceDbContext _db = db;
 
     public async Task CreateCategoryAsync()
     {
