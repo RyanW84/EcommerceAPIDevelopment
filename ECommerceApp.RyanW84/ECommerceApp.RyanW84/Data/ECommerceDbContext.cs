@@ -12,7 +12,6 @@ public class ECommerceDbContext : DbContext
     public DbSet<Models.Product> Products { get; set; } = null!;
     public DbSet<Models.Category> Categories { get; set; } = null!;
     public DbSet<Models.Sale> Sales { get; set; } = null!;
-    public DbSet<SalesSummary> SalesSummaries { get; set; } = null!; // For raw SQL mapping
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -85,12 +84,6 @@ public class ECommerceDbContext : DbContext
                 .WithMany(c => c.Sales)
                 .HasForeignKey(s => s.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        modelBuilder.Entity<SalesSummary>(entity =>
-        {
-            entity.HasNoKey();
-            entity.ToView("SalesSummaryView");
         });
 
         // Seed initial Categories
