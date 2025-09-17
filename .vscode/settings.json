@@ -1,0 +1,11 @@
+{
+    "dotnet.defaultSolution": "ECommerceApp.RyanW84.sln",
+    "omnisharp.useModernNet": true,
+    "dotnetAcquisitionExtension.allowInvalidPaths": true,
+    "dotnetAcquisitionExtension.existingDotnetPath": [
+        {
+            "extensionId": "ms-dotnettools.csharp",
+            "path": "C:\\Program Files\\dotnet\\dotnet.exe"
+        }
+    ]
+}
