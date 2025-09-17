@@ -56,16 +56,13 @@ public class Program
         }
 
         // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error");
-            app.UseHsts();
-
+            // In development, expose the OpenAPI document and Scalar UI
             app.MapOpenApi();
             app.MapScalarApiReference(options =>
             {
-                options.OpenApiRoutePattern = "api/document.json";
-                options.Title = "ECommerceApp.RyanW84 API";
+                options.Title = "ECommerceApp.RyanW84 API (Development)";
                 options.Theme = ScalarTheme.BluePlanet;
                 options.Layout = ScalarLayout.Modern;
                 options.DarkMode = true;
@@ -73,16 +70,8 @@ public class Program
         }
         else
         {
-            // In development expose the OpenAPI document and Scalar UI too
-            app.MapOpenApi(pattern: "api/document.json");
-            app.MapScalarApiReference(options =>
-            {
-                options.OpenApiRoutePattern = "api/document.json";
-                options.Title = "ECommerceApp.RyanW84 API (Dev)";
-                options.Theme = ScalarTheme.BluePlanet;
-                options.Layout = ScalarLayout.Modern;
-                options.DarkMode = true;
-            });
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
         }
 
         app.UseHttpsRedirection();
@@ -96,8 +85,8 @@ public class Program
         // Map attribute routed controllers (needed so controller actions are reachable)
         app.MapControllers();
 
-        // Optional: simple root endpoint - helps avoid 404 on GET /
-        app.MapGet("/", () => Results.Redirect("/api/document.json"));
+        // Optional: simple root endpoint - redirect to Scalar API documentation
+        app.MapGet("/", () => Results.Redirect("/scalar/v1"));
 
         app.Run();
     }
