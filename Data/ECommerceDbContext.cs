@@ -84,72 +84,65 @@ public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : 
 
     public void SeedData()
     {
-        // Seed initial Categories
-        Categories.RemoveRange(Categories);
-        Products.RemoveRange(Products);
-        Sales.RemoveRange(Sales);
+        // Only seed if no data exists
+        if (Categories.Any()) return;
 
+        // Seed initial Categories (don't set ID - let it auto-increment)
         Category Electronics = new()
         {
-            CategoryId = 1,
             Name = "Electronics",
             Description = "Electronic gadgets and devices",
         };
         Category Books = new()
         {
-            CategoryId = 2,
             Name = "Books",
             Description = "Various kinds of books",
         };
         Category Clothing = new()
         {
-            CategoryId = 3,
             Name = "Clothing",
             Description = "Apparel and accessories",
         };
 
         Categories.AddRange(Electronics, Books, Clothing);
+        SaveChanges(); // Save categories first to get their IDs
 
-        // Seed initial Products
+        // Seed initial Products (don't set ID - let it auto-increment)
         Product product1 = new()
         {
-            ProductId = 1,
             Name = "Smartphone",
             Description = "Latest model smartphone",
             Price = 699.99m,
             Stock = 50,
             IsActive = true,
-            CategoryId = 1,
+            CategoryId = Electronics.CategoryId, // Use the generated ID
         };
         Product product2 = new()
         {
-            ProductId = 2,
             Name = "Laptop",
             Description = "High performance laptop",
             Price = 1299.99m,
             Stock = 30,
             IsActive = true,
-            CategoryId = 1,
+            CategoryId = Electronics.CategoryId,
         };
         Product product3 = new()
         {
-            ProductId = 3,
             Name = "Novel",
             Description = "Bestselling fiction novel",
             Price = 19.99m,
             Stock = 100,
             IsActive = true,
-            CategoryId = 2,
+            CategoryId = Books.CategoryId,
         };
         Product product4 = new()
         {
-            ProductId = 4,
             Name = "T-Shirt",
             Description = "100% cotton t-shirt",
             Price = 9.99m,
             Stock = 200,
             IsActive = true,
-            CategoryId = 3,
+            CategoryId = Clothing.CategoryId,
         };
 
         Products.AddRange(product1, product2, product3, product4);

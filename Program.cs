@@ -14,7 +14,14 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                // Handle circular references
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                // Optional: Make JSON more readable
+                options.JsonSerializerOptions.WriteIndented = true;
+            });
 
         // Add Scalar for API documentation
         builder.Services.AddOpenApi();
@@ -40,11 +47,20 @@ public class Program
                 // Applies any pending migrations; creates database if it doesn't exist
                 db.Database.Migrate();
 
-                // Seed data if desired (call only when appropriate)
-                if (!app.Environment.IsDevelopment())
+                // Seed data in Development environment if database is empty
+                if (app.Environment.IsDevelopment())
                 {
-                    db.SeedData();
-                    db.SaveChanges();
+                    // Check if data already exists to avoid re-seeding
+                    if (!db.Categories.Any())
+                    {
+                        db.SeedData();
+                        db.SaveChanges();
+                        app.Logger.LogInformation("Database seeded with initial data.");
+                    }
+                    else
+                    {
+                        app.Logger.LogInformation("Database already contains data, skipping seeding.");
+                    }
                 }
             }
             catch (Exception ex)
