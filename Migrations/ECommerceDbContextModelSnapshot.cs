@@ -154,7 +154,7 @@ namespace ECommerceApp.RyanW84.Migrations
                     b.HasOne("ECommerceApp.RyanW84.Data.Models.Category", "Category")
                         .WithMany("Sales")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ECommerceApp.RyanW84.Data.Models.Product", "Product")

@@ -53,7 +53,7 @@ public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : 
                 .HasMany(c => c.Sales)
                 .WithOne(s => s.Category)
                 .HasForeignKey(s => s.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<Models.Sale>(entity =>
@@ -78,7 +78,7 @@ public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : 
                 .HasOne(s => s.Category)
                 .WithMany(c => c.Sales)
                 .HasForeignKey(s => s.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         });
     }
 

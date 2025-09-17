@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceApp.RyanW84.Migrations
 {
     [DbContext(typeof(ECommerceDbContext))]
-    [Migration("20250916193726_InitialCreate")]
+    [Migration("20250917154056_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -157,7 +157,7 @@ namespace ECommerceApp.RyanW84.Migrations
                     b.HasOne("ECommerceApp.RyanW84.Data.Models.Category", "Category")
                         .WithMany("Sales")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ECommerceApp.RyanW84.Data.Models.Product", "Product")

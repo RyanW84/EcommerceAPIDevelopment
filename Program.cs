@@ -31,6 +31,30 @@ public class Program
 
         var app = builder.Build();
 
+        // Ensure database migrations are applied and optionally seed data
+        using (var scope = app.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<ECommerceDbContext>();
+            try
+            {
+                // Applies any pending migrations; creates database if it doesn't exist
+                db.Database.Migrate();
+
+                // Seed data if desired (call only when appropriate)
+                if (!app.Environment.IsDevelopment())
+                {
+                    db.SeedData();
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or rethrow as appropriate for your app; failing to migrate should be handled
+                app.Logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+                throw;
+            }
+        }
+
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
@@ -46,13 +70,6 @@ public class Program
                 options.Layout = ScalarLayout.Modern;
                 options.DarkMode = true;
             });
-
-            var context = app
-                .Services.CreateScope()
-                .ServiceProvider.GetRequiredService<ECommerceDbContext>();
-
-            context.SeedData();
-            context.SaveChanges();
         }
         else
         {
