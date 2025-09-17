@@ -7,5 +7,8 @@
             "extensionId": "ms-dotnettools.csharp",
             "path": "C:\\Program Files\\dotnet\\dotnet.exe"
         }
-    ]
+    ],
+    "omnisharp.enableRoslynAnalyzers": true,
+    "omnisharp.enableEditorConfigSupport": true,
+    "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true
 }
