@@ -8,7 +8,7 @@ namespace ECommerceApp.RyanW84;
 
 public class Program
 {
-    // Entry point of the application
+    // Entry point of the application --test
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
