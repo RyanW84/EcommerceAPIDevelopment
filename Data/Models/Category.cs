@@ -6,9 +6,9 @@ public class Category
 	public required string Name { get; set; } = null!;
 	public required string Description { get; set; } = null!;
 
-	// Navigation property to Products
-	public ICollection<Product> Products { get; set; } = new List<Product>();
+    // Navigation property to Products
+    public ICollection<Product> Products { get; set; } = new List<Product>();
 
-	// Navigation property to Sales
-	public ICollection<Sale> Sales { get; set; } = new List<Sale>();
+    // Navigation property to Sales
+    public ICollection<Sale> Sales { get; set; } = new List<Sale>();
 	}

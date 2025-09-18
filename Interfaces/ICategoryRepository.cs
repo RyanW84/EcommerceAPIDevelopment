@@ -26,8 +26,8 @@ public interface ICategoryRepository
         Category entity,
         CancellationToken cancellationToken = default
     );
-    Task<ApiResponseDto<Category>> DeleteAsync(
-        Category entity,
+    Task<ApiResponseDto<bool>> DeleteAsync(
+       int id,
         CancellationToken cancellationToken = default
     );
 }

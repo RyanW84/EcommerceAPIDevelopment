@@ -3,16 +3,52 @@
   "WorkspaceRootPath": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\interfaces\\icategoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:interfaces\\icategoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\interfaces\\isaleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:interfaces\\isaleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\data\\ecommercedbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:data\\ecommercedbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\data\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:data\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\data\\models\\sale.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:data\\models\\sale.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\repositories\\salerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:repositories\\salerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\data\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:data\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\repositories\\categoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:repositories\\categoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\interfaces\\iproductrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:interfaces\\iproductrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\interfaces\\isalerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:interfaces\\isalerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\interfaces\\icategoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:interfaces\\icategoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\interfaces\\icategoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:interfaces\\icategoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,10 +67,6 @@
       "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:ecommerceapp.ryanw84.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\interfaces\\iproductrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:interfaces\\iproductrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|c:\\users\\ryanw\\onedrive\\documents\\github\\ecommerceapidevelopment\\interfaces\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE08365A-9671-42FF-BF24-F8A7B9C1A80F}|ECommerceApp.RyanW84.csproj|solutionrelative:interfaces\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -50,50 +82,162 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Data\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "Data\\Models\\Product.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Data\\Models\\Product.cs",
+              "RelativeToolTip": "Data\\Models\\Product.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAUwAkAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T19:20:14.379Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Category.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Data\\Models\\Category.cs",
+              "RelativeDocumentMoniker": "Data\\Models\\Category.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Data\\Models\\Category.cs",
+              "RelativeToolTip": "Data\\Models\\Category.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T19:19:09.728Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Sale.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Data\\Models\\Sale.cs",
+              "RelativeDocumentMoniker": "Data\\Models\\Sale.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Data\\Models\\Sale.cs",
+              "RelativeToolTip": "Data\\Models\\Sale.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T19:18:54.859Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SaleRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Repositories\\SaleRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\SaleRepository.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Repositories\\SaleRepository.cs",
+              "RelativeToolTip": "Repositories\\SaleRepository.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAzwFMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T19:16:38.212Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ISaleService.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\ISaleService.cs",
+              "RelativeDocumentMoniker": "Interfaces\\ISaleService.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\ISaleService.cs",
+              "RelativeToolTip": "Interfaces\\ISaleService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T19:07:23.075Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ISaleRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\ISaleRepository.cs",
+              "RelativeDocumentMoniker": "Interfaces\\ISaleRepository.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\ISaleRepository.cs",
+              "RelativeToolTip": "Interfaces\\ISaleRepository.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAwwBkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T19:06:56.617Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ECommerceDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Data\\ECommerceDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ECommerceDbContext.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Data\\ECommerceDbContext.cs",
+              "RelativeToolTip": "Data\\ECommerceDbContext.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAQwAcAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T14:20:46.761Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ICategoryService.cs",
+              "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\ICategoryService.cs",
+              "RelativeDocumentMoniker": "Interfaces\\ICategoryService.cs",
+              "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\ICategoryService.cs",
+              "RelativeToolTip": "Interfaces\\ICategoryService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T13:47:02.221Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "CategoryService.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Services\\CategoryService.cs",
               "RelativeDocumentMoniker": "Services\\CategoryService.cs",
               "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Services\\CategoryService.cs",
               "RelativeToolTip": "Services\\CategoryService.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAABgAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAGQAAAAAAAAAAIAywHEAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-18T13:27:56.915Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "CategoryRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Repositories\\CategoryRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\CategoryRepository.cs",
               "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Repositories\\CategoryRepository.cs",
               "RelativeToolTip": "Repositories\\CategoryRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAMIAAAAAAAAAAADwv9QAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-18T13:21:16.852Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 9,
               "Title": "ICategoryRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\ICategoryRepository.cs",
               "RelativeDocumentMoniker": "Interfaces\\ICategoryRepository.cs",
               "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\ICategoryRepository.cs",
               "RelativeToolTip": "Interfaces\\ICategoryRepository.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAMwCEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAwwBwAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-18T13:20:34.822Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 14,
               "Title": "ProductService.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Services\\ProductService.cs",
               "RelativeDocumentMoniker": "Services\\ProductService.cs",
@@ -106,7 +250,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 12,
               "Title": "ProductRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Repositories\\ProductRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\ProductRepository.cs",
@@ -119,28 +263,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ECommerceApp.RyanW84",
+              "DocumentIndex": 15,
+              "Title": "ECommerceApp.RyanW84.csproj",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84.csproj",
               "RelativeDocumentMoniker": "ECommerceApp.RyanW84.csproj",
               "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\ECommerceApp.RyanW84.csproj",
               "RelativeToolTip": "ECommerceApp.RyanW84.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-09-18T13:15:10.921Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "WhenOpened": "2025-09-18T13:15:10.921Z"
             },
             {
               "$type": "Document",
@@ -150,14 +281,14 @@
               "RelativeDocumentMoniker": "Interfaces\\IProductRepository.cs",
               "ToolTip": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\IProductRepository.cs",
               "RelativeToolTip": "Interfaces\\IProductRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAA0wBEAAACGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-18T13:13:17.246Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 16,
               "Title": "IRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Interfaces\\IRepository.cs",
               "RelativeDocumentMoniker": "Interfaces\\IRepository.cs",
@@ -170,7 +301,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 17,
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\.gitignore",
               "RelativeDocumentMoniker": ".gitignore",
@@ -183,7 +314,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 13,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Ryanw\\OneDrive\\Documents\\GitHub\\EcommerceAPIDevelopment\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
