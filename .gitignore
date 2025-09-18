@@ -7,7 +7,30 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
+# IDE-specific
+.vs/
+vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.csproj.user
+*.DotSettings.user
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
 # Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Bb]uild[Ll]og.*
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -17,38 +40,47 @@ x86/
 [Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
-
-# .NET Core
-project.lock.json
-project.fragment.lock.json
 artifacts/
+bld/
 
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
+# ASP.NET / Web
+wwwroot/lib/
+node_modules/
+dist/
 
-# NuGet Packages
+# Testing / Coverage
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+coverage*/
+TestResult.xml
+nunit-*.xml
+*.VisualState.xml
+
+# Logs
+*.log
+*.binlog
+
+# NuGet
 *.nupkg
-# NuGet Symbol Packages
 *.snupkg
+packages/
 
-# Others
+# Others / Temp
 ~$*
 *~
 CodeCoverage/
 
-# MSBuild Binary and Structured Log
-*.binlog
+# EF Core - keep migrations (do NOT ignore Migrations/)
 
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
+# GitHub Copilot (ignore anything related)
+.copilot/
+**/copilot/
+**/*copilot*
+.github/copilot*
+.github/copilot/**
+**/*Copilot*
 
-# NUnit
-*.VisualState.xml
-TestResult.xml
-nunit-*.xml
+# Allow launchSettings.json to be committed
+!**/Properties/launchSettings.json

@@ -1,0 +1,212 @@
+﻿using System.Net;
+using ECommerceApp.RyanW84.Data;
+using ECommerceApp.RyanW84.Data.DTO;
+using ECommerceApp.RyanW84.Data.Models;
+using ECommerceApp.RyanW84.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace ECommerceApp.RyanW84.Repositories;
+
+public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
+{
+    private readonly ECommerceDbContext _db = db;
+
+    public async Task<bool> CategoryExistsAsync(
+        string categoryName,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (string.IsNullOrWhiteSpace(categoryName))
+            return false;
+        return await _db
+            .Categories.AsNoTracking()
+            .AnyAsync(c => c.Name == categoryName, cancellationToken);
+    }
+
+    public async Task<ApiResponseDto<Category?>> GetByIdAsync(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            var category = await _db
+                .Categories.AsNoTracking()
+                .Include(c => c.Products)
+                .Include(c => c.Sales)
+                .FirstOrDefaultAsync(c => c.CategoryId == id, cancellationToken);
+
+            return new ApiResponseDto<Category?>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = category,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<Category?>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = null,
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<Category?>> GetByNameAsync(
+        string name,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            var category = await _db
+                .Categories.AsNoTracking()
+                .Include(c => c.Products)
+                .Include(c => c.Sales)
+                .FirstOrDefaultAsync(c => c.Name == name, cancellationToken);
+
+            return new ApiResponseDto<Category?>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = category,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<Category?>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = null,
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            var list = await _db
+                .Categories.AsNoTracking()
+                .Include(c => c.Products)
+                .ToListAsync(cancellationToken);
+
+            return new ApiResponseDto<List<Category>>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = list,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<List<Category>>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = [],
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<Category>> AddAsync(
+        Category entity,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            await _db.Categories.AddAsync(entity, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.Created,
+                ErrorMessage = string.Empty,
+                Data = entity,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = entity,
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<Category>> UpdateAsync(
+        Category entity,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            _db.Categories.Update(entity);
+            await _db.SaveChangesAsync(cancellationToken);
+
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = entity,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = entity,
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<Category>> DeleteAsync(
+        Category entity,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            _db.Categories.Remove(entity);
+            await _db.SaveChangesAsync(cancellationToken);
+
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = entity,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = entity,
+            };
+        }
+    }
+}

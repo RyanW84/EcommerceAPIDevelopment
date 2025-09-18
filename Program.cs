@@ -14,11 +14,17 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddControllers()
+        builder
+            .Services.AddControllers()
             .AddJsonOptions(options =>
             {
                 // Handle circular references
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.ReferenceHandler = System
+                    .Text
+                    .Json
+                    .Serialization
+                    .ReferenceHandler
+                    .Preserve;
                 // Optional: Make JSON more readable
                 options.JsonSerializerOptions.WriteIndented = true;
             });
@@ -35,6 +41,8 @@ public class Program
         builder.Services.AddScoped<ICategoryService, CategoryService>();
         builder.Services.AddScoped<ISaleService, SaleService>();
         builder.Services.AddScoped<ISalesSummaryService, SalesSummaryService>();
+        builder.Services.AddScoped<IProductRepository, Repositories.ProductRepository>();
+        builder.Services.AddScoped<ICategoryRepository, Repositories.CategoryRepository>();
 
         var app = builder.Build();
 
@@ -59,14 +67,19 @@ public class Program
                     }
                     else
                     {
-                        app.Logger.LogInformation("Database already contains data, skipping seeding.");
+                        app.Logger.LogInformation(
+                            "Database already contains data, skipping seeding."
+                        );
                     }
                 }
             }
             catch (Exception ex)
             {
                 // Log or rethrow as appropriate for your app; failing to migrate should be handled
-                app.Logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+                app.Logger.LogError(
+                    ex,
+                    "An error occurred while migrating or seeding the database."
+                );
                 throw;
             }
         }
