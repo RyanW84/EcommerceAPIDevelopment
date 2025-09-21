@@ -200,7 +200,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             };
         }
 
-        var delResult = await _categoryRepository.DeleteAsync(existing, cancellationToken);
+        var delResult = await _categoryRepository.DeleteAsync(existing.CategoryId, cancellationToken);
         if (delResult.RequestFailed)
         {
             return new ApiResponseDto<bool>

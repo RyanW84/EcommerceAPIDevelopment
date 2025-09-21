@@ -5,26 +5,18 @@ using ECommerceApp.RyanW84.Interfaces;
 
 namespace ECommerceApp.RyanW84.Services
 {
-    public class ProductService(IProductRepository productRepository): IProductService
+    public class ProductService(IProductRepository productRepository) : IProductService
     {
         private readonly IProductRepository _productRepository = productRepository;
 
-		public async Task CreateProductAsync()
+        public async Task CreateProductAsync()
         {
             await Task.Delay(1000);
         }
 
         public async Task<ApiResponseDto<List<Product>>> GetProductsAsync()
         {
-            var products = await _productRepository.GetActiveProductsWithCategoryAsync();
-
-            return new ApiResponseDto<List<Product>>()
-            {
-                RequestFailed = false,
-                ResponseCode = HttpStatusCode.OK,
-                ErrorMessage = "No Errors",
-                Data = products,
-            };
+            return await _productRepository.GetAllProductsAsync();
         }
 
         public async Task GetProductFromSelectionPromptAsync(string prompt)

@@ -180,32 +180,42 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
         }
     }
 
-    public async Task<ApiResponseDto<Category>> DeleteAsync(
-        Category entity,
+    public async Task<ApiResponseDto<bool>> DeleteAsync(
+        int id,
         CancellationToken cancellationToken = default
     )
     {
         try
         {
-            _db.Categories.Remove(entity);
+            var category = await _db.Categories.FindAsync(new object[] { id }, cancellationToken);
+            if (category == null)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.NotFound,
+                    ErrorMessage = "Category not found",
+                    Data = false,
+                };
+            }
+            _db.Categories.Remove(category);
             await _db.SaveChangesAsync(cancellationToken);
-
-            return new ApiResponseDto<Category>
+            return new ApiResponseDto<bool>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
                 ErrorMessage = string.Empty,
-                Data = entity,
+                Data = true,
             };
         }
         catch (Exception ex)
         {
-            return new ApiResponseDto<Category>
+            return new ApiResponseDto<bool>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
                 ErrorMessage = ex.Message,
-                Data = entity,
+                Data = false,
             };
         }
     }

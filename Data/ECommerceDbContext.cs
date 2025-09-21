@@ -49,13 +49,13 @@ public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : 
         modelBuilder.Entity<Category>()
             .HasMany(c => c.Sales)
             .WithMany(s => s.Categories)
-            .UsingEntity<Dictionary<string , object>>(
-                "CategorySale" ,
-                j => j.HasOne<Sale>().WithMany().HasForeignKey("SaleId").OnDelete(DeleteBehavior.Cascade) ,
-                j => j.HasOne<Category>().WithMany().HasForeignKey("CategoryId").OnDelete(DeleteBehavior.Cascade) ,
+            .UsingEntity<Dictionary<string, object>>(
+                "CategorySale",
+                j => j.HasOne<Sale>().WithMany().HasForeignKey("SaleId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<Category>().WithMany().HasForeignKey("CategoryId").OnDelete(DeleteBehavior.Cascade),
                 j =>
                 {
-                    j.HasKey("CategoryId" , "SaleId");
+                    j.HasKey("CategoryId", "SaleId");
                     j.ToTable("CategorySales");
                 });
 
@@ -84,5 +84,24 @@ public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : 
             entity.Property(si => si.Quantity).IsRequired();
             entity.Property(si => si.UnitPrice).IsRequired().HasPrecision(18, 2);
         });
+    }
+
+    public void SeedData()
+    {
+        // Seed Categories
+        var electronics = new Category { CategoryId = 1, Name = "Electronics", Description = "Electronic devices and gadgets" };
+        var clothing = new Category { CategoryId = 2, Name = "Clothing", Description = "Apparel and fashion items" };
+        var books = new Category { CategoryId = 3, Name = "Books", Description = "Books and publications" };
+
+        Categories.AddRange(electronics, clothing, books);
+
+        // Seed Products
+        Products.AddRange(
+            new Product { ProductId = 1, Name = "Laptop", Description = "High-performance laptop", Price = 999.99m, Stock = 10, IsActive = true, CategoryId = 1 },
+            new Product { ProductId = 2, Name = "Smartphone", Description = "Latest smartphone model", Price = 699.99m, Stock = 15, IsActive = true, CategoryId = 1 },
+            new Product { ProductId = 3, Name = "T-Shirt", Description = "Cotton t-shirt", Price = 19.99m, Stock = 50, IsActive = true, CategoryId = 2 },
+            new Product { ProductId = 4, Name = "Jeans", Description = "Denim jeans", Price = 49.99m, Stock = 30, IsActive = true, CategoryId = 2 },
+            new Product { ProductId = 5, Name = "Programming Book", Description = "Learn C# programming", Price = 39.99m, Stock = 20, IsActive = true, CategoryId = 3 }
+        );
     }
 }

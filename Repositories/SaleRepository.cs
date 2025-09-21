@@ -20,9 +20,9 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         {
             var sale = await _db
                 .Sales.AsNoTracking()
-                .Include(s => s.Products)
+                .Include(s => s.SaleItems).ThenInclude(si => si.Product)
                 .Include(s => s.Categories)
-                .FirstOrDefaultAsync(s => s.CategoryId == id, cancellationToken);
+                .FirstOrDefaultAsync(s => s.SaleId == id, cancellationToken);
 
             return new ApiResponseDto<Sale?>
             {
@@ -52,7 +52,8 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         {
             var list = await _db
                 .Sales.AsNoTracking()
-                .Include(s => s.Products)
+                .Include(s => s.SaleItems).ThenInclude(si => si.Product)
+                .Include(s => s.Categories)
                 .ToListAsync(cancellationToken);
 
             return new ApiResponseDto<List<Sale>>
@@ -82,10 +83,10 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
     {
         try
         {
-            await _db.Sale.AddAsync(entity, cancellationToken);
+            await _db.Sales.AddAsync(entity, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);
 
-            return new ApiResponseDto<Category>
+            return new ApiResponseDto<Sale>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.Created,
@@ -95,27 +96,27 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         }
         catch (Exception ex)
         {
-            return new ApiResponseDto<Category>
+            return new ApiResponseDto<Sale>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
                 ErrorMessage = ex.Message,
-                Data = entity,
+                Data = null,
             };
         }
     }
 
-    public async Task<ApiResponseDto<Category>> UpdateAsync(
-        Category entity,
+    public async Task<ApiResponseDto<Sale>> UpdateAsync(
+        Sale entity,
         CancellationToken cancellationToken = default
     )
     {
         try
         {
-            _db.Categories.Update(entity);
+            _db.Sales.Update(entity);
             await _db.SaveChangesAsync(cancellationToken);
 
-            return new ApiResponseDto<Category>
+            return new ApiResponseDto<Sale>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
@@ -125,42 +126,52 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         }
         catch (Exception ex)
         {
-            return new ApiResponseDto<Category>
+            return new ApiResponseDto<Sale>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
                 ErrorMessage = ex.Message,
-                Data = entity,
+                Data = null,
             };
         }
     }
 
-    public async Task<ApiResponseDto<Category>> DeleteAsync(
-        Category entity,
+    public async Task<ApiResponseDto<bool>> DeleteAsync(
+        int id,
         CancellationToken cancellationToken = default
     )
     {
         try
         {
-            _db.Categories.Remove(entity);
+            var sale = await _db.Sales.FindAsync(new object[] { id }, cancellationToken);
+            if (sale == null)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.NotFound,
+                    ErrorMessage = "Sale not found",
+                    Data = false,
+                };
+            }
+            _db.Sales.Remove(sale);
             await _db.SaveChangesAsync(cancellationToken);
-
-            return new ApiResponseDto<Category>
+            return new ApiResponseDto<bool>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
                 ErrorMessage = string.Empty,
-                Data = entity,
+                Data = true,
             };
         }
         catch (Exception ex)
         {
-            return new ApiResponseDto<Category>
+            return new ApiResponseDto<bool>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
                 ErrorMessage = ex.Message,
-                Data = entity,
+                Data = false,
             };
         }
     }
