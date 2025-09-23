@@ -22,6 +22,21 @@ namespace ECommerceApp.RyanW84.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CategorySale", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SaleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoryId", "SaleId");
+
+                    b.HasIndex("SaleId");
+
+                    b.ToTable("CategorySales", (string)null);
+                });
+
             modelBuilder.Entity("ECommerceApp.RyanW84.Data.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -32,13 +47,11 @@ namespace ECommerceApp.RyanW84.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CategoryId");
 
@@ -98,9 +111,6 @@ namespace ECommerceApp.RyanW84.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SaleId"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CustomerAddress")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -116,12 +126,6 @@ namespace ECommerceApp.RyanW84.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("SaleDate")
                         .HasColumnType("datetime2");
 
@@ -131,11 +135,44 @@ namespace ECommerceApp.RyanW84.Migrations
 
                     b.HasKey("SaleId");
 
-                    b.HasIndex("CategoryId");
+                    b.ToTable("Sales");
+                });
+
+            modelBuilder.Entity("ECommerceApp.RyanW84.Data.Models.SaleItem", b =>
+                {
+                    b.Property<int>("SaleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("SaleId", "ProductId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Sales");
+                    b.ToTable("SaleItems");
+                });
+
+            modelBuilder.Entity("CategorySale", b =>
+                {
+                    b.HasOne("ECommerceApp.RyanW84.Data.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ECommerceApp.RyanW84.Data.Models.Sale", null)
+                        .WithMany()
+                        .HasForeignKey("SaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ECommerceApp.RyanW84.Data.Models.Product", b =>
@@ -149,35 +186,38 @@ namespace ECommerceApp.RyanW84.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("ECommerceApp.RyanW84.Data.Models.Sale", b =>
+            modelBuilder.Entity("ECommerceApp.RyanW84.Data.Models.SaleItem", b =>
                 {
-                    b.HasOne("ECommerceApp.RyanW84.Data.Models.Category", "Category")
-                        .WithMany("Sales")
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("ECommerceApp.RyanW84.Data.Models.Product", "Product")
+                        .WithMany("SaleItems")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("ECommerceApp.RyanW84.Data.Models.Product", "Product")
-                        .WithMany("Sales")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("ECommerceApp.RyanW84.Data.Models.Sale", "Sale")
+                        .WithMany("SaleItems")
+                        .HasForeignKey("SaleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
-
                     b.Navigation("Product");
+
+                    b.Navigation("Sale");
                 });
 
             modelBuilder.Entity("ECommerceApp.RyanW84.Data.Models.Category", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("Sales");
                 });
 
             modelBuilder.Entity("ECommerceApp.RyanW84.Data.Models.Product", b =>
                 {
-                    b.Navigation("Sales");
+                    b.Navigation("SaleItems");
+                });
+
+            modelBuilder.Entity("ECommerceApp.RyanW84.Data.Models.Sale", b =>
+                {
+                    b.Navigation("SaleItems");
                 });
 #pragma warning restore 612, 618
         }
