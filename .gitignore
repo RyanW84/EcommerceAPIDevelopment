@@ -84,3 +84,4 @@ CodeCoverage/
 
 # Allow launchSettings.json to be committed
 !**/Properties/launchSettings.json
+.fake

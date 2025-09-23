@@ -88,20 +88,23 @@ public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : 
 
     public void SeedData()
     {
-        // Seed Categories
-        var electronics = new Category { CategoryId = 1, Name = "Electronics", Description = "Electronic devices and gadgets" };
-        var clothing = new Category { CategoryId = 2, Name = "Clothing", Description = "Apparel and fashion items" };
-        var books = new Category { CategoryId = 3, Name = "Books", Description = "Books and publications" };
+        // Seed Categories - Let Entity Framework auto-generate IDs
+        var electronics = new Category { Name = "Electronics", Description = "Electronic devices and gadgets" };
+        var clothing = new Category { Name = "Clothing", Description = "Apparel and fashion items" };
+        var books = new Category { Name = "Books", Description = "Books and publications" };
 
         Categories.AddRange(electronics, clothing, books);
 
-        // Seed Products
+        // Save categories first to get their generated IDs
+        SaveChanges();
+
+        // Seed Products - Use the generated CategoryIds
         Products.AddRange(
-            new Product { ProductId = 1, Name = "Laptop", Description = "High-performance laptop", Price = 999.99m, Stock = 10, IsActive = true, CategoryId = 1 },
-            new Product { ProductId = 2, Name = "Smartphone", Description = "Latest smartphone model", Price = 699.99m, Stock = 15, IsActive = true, CategoryId = 1 },
-            new Product { ProductId = 3, Name = "T-Shirt", Description = "Cotton t-shirt", Price = 19.99m, Stock = 50, IsActive = true, CategoryId = 2 },
-            new Product { ProductId = 4, Name = "Jeans", Description = "Denim jeans", Price = 49.99m, Stock = 30, IsActive = true, CategoryId = 2 },
-            new Product { ProductId = 5, Name = "Programming Book", Description = "Learn C# programming", Price = 39.99m, Stock = 20, IsActive = true, CategoryId = 3 }
+            new Product { Name = "Laptop", Description = "High-performance laptop", Price = 999.99m, Stock = 10, IsActive = true, CategoryId = electronics.CategoryId },
+            new Product { Name = "Smartphone", Description = "Latest smartphone model", Price = 699.99m, Stock = 15, IsActive = true, CategoryId = electronics.CategoryId },
+            new Product { Name = "T-Shirt", Description = "Cotton t-shirt", Price = 19.99m, Stock = 50, IsActive = true, CategoryId = clothing.CategoryId },
+            new Product { Name = "Jeans", Description = "Denim jeans", Price = 49.99m, Stock = 30, IsActive = true, CategoryId = clothing.CategoryId },
+            new Product { Name = "Programming Book", Description = "Learn C# programming", Price = 39.99m, Stock = 20, IsActive = true, CategoryId = books.CategoryId }
         );
     }
 }

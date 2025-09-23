@@ -16,7 +16,8 @@
                 "uriFormat": "%s/scalar/v1"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:51679;http://localhost:51680"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

@@ -1,14 +1,80 @@
 {
+    // Solution and project settings
     "dotnet.defaultSolution": "ECommerceApp.RyanW84.sln",
+
+    // .NET 10.0 specific settings - use modern language server instead of OmniSharp
+    "dotnet.server.useOmnisharp": false,
     "omnisharp.useModernNet": true,
     "dotnetAcquisitionExtension.allowInvalidPaths": true,
-    "dotnetAcquisitionExtension.existingDotnetPath": [
-        {
-            "extensionId": "ms-dotnettools.csharp",
-            "path": "C:\\Program Files\\dotnet\\dotnet.exe"
-        }
-    ],
+
+    // Enable advanced IntelliSense features for .NET 10.0
+    "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
+    "dotnet.codeLens.enableReferencesCodeLens": true,
+    "dotnet.codeLens.enableTestsCodeLens": true,
+
+    // Inlay hints for better code readability
+    "dotnet.inlayHints.enableInlayHintsForParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForLiteralParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForIndexerParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForObjectCreationParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForOtherParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForTypes": true,
+    "dotnet.inlayHints.enableInlayHintsForImplicitVariableTypes": true,
+    "dotnet.inlayHints.enableInlayHintsForLambdaParameterTypes": true,
+    "dotnet.inlayHints.enableInlayHintsForImplicitObjectCreation": true,
+
+    // Enhanced C# language features
+    "csharp.semanticHighlighting.enabled": true,
+    "csharp.format.enable": true,
+    "csharp.suppressHiddenDiagnostics": false,
+    "csharp.showOmnisharpLogOnError": true,
+
+    // Roslyn analyzers and editor config support
     "omnisharp.enableRoslynAnalyzers": true,
     "omnisharp.enableEditorConfigSupport": true,
-    "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true
+
+    // File associations for .NET
+    "files.associations": {
+        "*.cs": "csharp",
+        "*.csx": "csharp",
+        "*.cake": "csharp",
+        "*.cshtml": "html",
+        "*.razor": "razor"
+    },
+
+    // Editor settings optimized for C# and .NET 10.0
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+    },
+
+    // IntelliSense optimization
+    "editor.suggest.insertMode": "replace",
+    "editor.acceptSuggestionOnCommitCharacter": true,
+    "editor.acceptSuggestionOnEnter": "on",
+
+    // Debug settings
+    "debug.allowBreakpointsEverywhere": true,
+    "debug.showInlineBreakpointCandidates": true,
+
+    // Terminal settings for .NET commands
+    "terminal.integrated.env.linux": {
+        "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
+    },
+
+    // File explorer and search exclusions
+    "files.exclude": {
+        "**/bin": true,
+        "**/obj": true,
+        "**/.vs": true
+    },
+    "search.exclude": {
+        "**/bin": true,
+        "**/obj": true,
+        "**/.vs": true,
+        "**/node_modules": true
+    }
 }
