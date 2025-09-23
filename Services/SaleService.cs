@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Data.DTO;
 using ECommerceApp.RyanW84.Data.Models;
 using ECommerceApp.RyanW84.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.RyanW84.Services;
 
@@ -17,7 +17,7 @@ public class SaleService(ECommerceDbContext db) : ISaleService
     public async Task<ApiResponseDto<Sale>> CreateSaleAsync(ApiRequestDto<Sale> request, CancellationToken cancellationToken = default)
     {
         var payload = request?.Payload;
-        if (payload is null || payload.SaleItems is null || !payload.SaleItems.Any())
+        if (payload is null || payload.SaleItems is null || payload.SaleItems.Count == 0)
             return new ApiResponseDto<Sale>
             {
                 RequestFailed = true,

@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using ECommerceApp.RyanW84.Data.DTO;
 using ECommerceApp.RyanW84.Data.Models;
 using ECommerceApp.RyanW84.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceApp.RyanW84.Controllers;
 

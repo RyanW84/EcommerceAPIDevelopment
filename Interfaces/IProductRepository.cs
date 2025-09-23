@@ -1,26 +1,26 @@
-﻿using ECommerceApp.RyanW84.Data.DTO;
+using ECommerceApp.RyanW84.Data.DTO;
 using ECommerceApp.RyanW84.Data.Models;
 
 namespace ECommerceApp.RyanW84.Interfaces;
 
 public interface IProductRepository
-    {
+{
 
     Task<ApiResponseDto<Product?>> GetByIdAsync(
-        int id ,
+        int id,
         CancellationToken cancellationToken = default
     );
     Task<ApiResponseDto<List<Product>>> GetAllProductsAsync(CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Product>> AddAsync(
-        Product entity ,
+        Product entity,
         CancellationToken cancellationToken = default
     );
-    Task <ApiResponseDto<List<Product>>> GetProductsByCategoryIdAsync(int categoryId , CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<List<Product>>> GetProductsByCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Product>> UpdateAsync(
-        Product  entity ,
+        Product entity,
         CancellationToken cancellationToken = default
     );
-    Task<ApiResponseDto<bool>> DeleteAsync(int id ,
+    Task<ApiResponseDto<bool>> DeleteAsync(int id,
         CancellationToken cancellationToken = default
     );
-    }
+}

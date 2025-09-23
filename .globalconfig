@@ -1,0 +1,46 @@
+# Microsoft Code Analysis Rules
+# Global analyzer configuration file for .NET projects
+# Based on Microsoft's recommended coding standards
+
+is_global = true
+
+# Microsoft Code Quality Rules (CA rules)
+dotnet_analyzer_diagnostic.category-design.severity = suggestion
+dotnet_analyzer_diagnostic.category-documentation.severity = suggestion
+dotnet_analyzer_diagnostic.category-globalization.severity = suggestion
+dotnet_analyzer_diagnostic.category-interoperability.severity = suggestion
+dotnet_analyzer_diagnostic.category-maintainability.severity = suggestion
+dotnet_analyzer_diagnostic.category-naming.severity = warning
+dotnet_analyzer_diagnostic.category-performance.severity = warning
+dotnet_analyzer_diagnostic.category-reliability.severity = warning
+dotnet_analyzer_diagnostic.category-security.severity = warning
+dotnet_analyzer_diagnostic.category-usage.severity = warning
+
+# Specific Microsoft recommended rules
+dotnet_diagnostic.CA1303.severity = none # Do not pass literals as localized parameters (disabled for dev)
+dotnet_diagnostic.CA1031.severity = suggestion # Do not catch general exception types
+dotnet_diagnostic.CA2007.severity = none # Consider calling ConfigureAwait on the awaited task (disabled for ASP.NET Core)
+dotnet_diagnostic.CA1848.severity = suggestion # Use the LoggerMessage delegates
+dotnet_diagnostic.CA1056.severity = warning # URI-like properties should not be strings
+dotnet_diagnostic.CA1054.severity = warning # URI-like parameters should not be strings
+dotnet_diagnostic.CA1055.severity = warning # URI-like return values should not be strings
+
+# Naming rules enforcement
+dotnet_diagnostic.CA1708.severity = warning # Identifiers should differ by more than case
+dotnet_diagnostic.CA1710.severity = suggestion # Identifiers should have correct suffix
+dotnet_diagnostic.CA1711.severity = suggestion # Identifiers should not have incorrect suffix
+
+# Security rules (important for web applications)
+dotnet_diagnostic.CA5350.severity = error # Do not use weak cryptographic algorithms
+dotnet_diagnostic.CA5351.severity = error # Do not use broken cryptographic algorithms
+dotnet_diagnostic.CA3075.severity = error # Insecure DTD processing in XML
+
+# Performance rules
+dotnet_diagnostic.CA1806.severity = warning # Do not ignore method results
+dotnet_diagnostic.CA1810.severity = warning # Initialize reference type static fields inline
+dotnet_diagnostic.CA1822.severity = suggestion # Mark members as static
+
+# Usage rules
+dotnet_diagnostic.CA2227.severity = suggestion # Collection properties should be read only
+dotnet_diagnostic.CA1002.severity = suggestion # Do not expose generic lists
+dotnet_diagnostic.CA1005.severity = suggestion # Avoid excessive parameters on generic types

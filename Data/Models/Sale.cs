@@ -1,4 +1,4 @@
-﻿namespace ECommerceApp.RyanW84.Data.Models;
+namespace ECommerceApp.RyanW84.Data.Models;
 
 public class Sale
 {
@@ -14,4 +14,4 @@ public class Sale
     public ICollection<Category> Categories { get; set; } = new List<Category>();
 
 
-    }
+}

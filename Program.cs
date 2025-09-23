@@ -1,4 +1,4 @@
-﻿using ECommerceApp.RyanW84.Data;
+using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Interfaces;
 using ECommerceApp.RyanW84.Services;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-﻿using ECommerceApp.RyanW84.Data.DTO;
+using ECommerceApp.RyanW84.Data.DTO;
 using ECommerceApp.RyanW84.Data.Models;
 
 namespace ECommerceApp.RyanW84.Interfaces;

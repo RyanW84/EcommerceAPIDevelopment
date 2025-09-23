@@ -23,7 +23,7 @@
     "dotnet.inlayHints.enableInlayHintsForLambdaParameterTypes": true,
     "dotnet.inlayHints.enableInlayHintsForImplicitObjectCreation": true,
 
-    // Enhanced C# language features
+    // Enhanced C# language features - Microsoft Standards
     "csharp.semanticHighlighting.enabled": true,
     "csharp.format.enable": true,
     "csharp.suppressHiddenDiagnostics": false,
@@ -42,14 +42,24 @@
         "*.razor": "razor"
     },
 
-    // Editor settings optimized for C# and .NET 10.0
+    // Editor settings optimized for C# and .NET 10.0 - Microsoft Standards
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
     "editor.formatOnPaste": true,
     "editor.codeActionsOnSave": {
+        // Microsoft standard code cleanup actions on save
         "source.organizeImports": "explicit",
-        "source.fixAll": "explicit"
+        "source.fixAll": "explicit",
+        "source.removeUnnecessaryImports": "explicit",
+        "source.sortImports": "explicit",
+        "source.addMissingImports": "explicit"
     },
+
+    // Microsoft C# formatting standards
+    "dotnet.format.enable": true,
+    "dotnet.completion.showNameCompletionSuggestions": true,
+    "dotnet.backgroundAnalysis.analyzerDiagnosticsScope": "fullSolution",
+    "dotnet.backgroundAnalysis.compilerDiagnosticsScope": "fullSolution",
 
     // IntelliSense optimization
     "editor.suggest.insertMode": "replace",
@@ -76,5 +86,6 @@
         "**/obj": true,
         "**/.vs": true,
         "**/node_modules": true
-    }
+    },
+    "dotnet.unitTestDebuggingOptions": {}
 }

@@ -1,4 +1,4 @@
-﻿using ECommerceApp.RyanW84.Data.Models;
+using ECommerceApp.RyanW84.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.RyanW84.Data;
