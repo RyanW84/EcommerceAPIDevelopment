@@ -87,5 +87,8 @@
         "**/.vs": true,
         "**/node_modules": true
     },
-    "dotnet.unitTestDebuggingOptions": {}
+    "dotnet.unitTestDebuggingOptions": {},
+    "cSpell.words": [
+        "ASPNETCORE"
+    ]
 }

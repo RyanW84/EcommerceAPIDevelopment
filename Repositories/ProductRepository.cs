@@ -37,43 +37,6 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<ApiResponseDto<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var product = await _db.Products.FindAsync(new object[] { id }, cancellationToken);
-                if (product == null)
-                {
-                    return new ApiResponseDto<bool>
-                    {
-                        RequestFailed = true,
-                        ResponseCode = HttpStatusCode.NotFound,
-                        ErrorMessage = "Product not found",
-                        Data = false,
-                    };
-                }
-                _db.Products.Remove(product);
-                await _db.SaveChangesAsync(cancellationToken);
-                return new ApiResponseDto<bool>
-                {
-                    RequestFailed = false,
-                    ResponseCode = HttpStatusCode.OK,
-                    ErrorMessage = string.Empty,
-                    Data = true,
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResponseDto<bool>
-                {
-                    RequestFailed = true,
-                    ResponseCode = HttpStatusCode.InternalServerError,
-                    ErrorMessage = ex.Message,
-                    Data = false,
-                };
-            }
-        }
-
         public async Task<ApiResponseDto<Product?>> GetByIdAsync(
             int id,
             CancellationToken cancellationToken = default
@@ -184,6 +147,43 @@ namespace ECommerceApp.RyanW84.Repositories
                     ResponseCode = HttpStatusCode.InternalServerError,
                     ErrorMessage = ex.Message,
                     Data = null,
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var product = await _db.Products.FindAsync(new object[] { id }, cancellationToken);
+                if (product == null)
+                {
+                    return new ApiResponseDto<bool>
+                    {
+                        RequestFailed = true,
+                        ResponseCode = HttpStatusCode.NotFound,
+                        ErrorMessage = "Product not found",
+                        Data = false,
+                    };
+                }
+                _db.Products.Remove(product);
+                await _db.SaveChangesAsync(cancellationToken);
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = false,
+                    ResponseCode = HttpStatusCode.NoContent,
+                    ErrorMessage = string.Empty,
+                    Data = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.InternalServerError,
+                    ErrorMessage = ex.Message,
+                    Data = false,
                 };
             }
         }

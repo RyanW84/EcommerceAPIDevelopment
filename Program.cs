@@ -91,10 +91,37 @@ public class Program
             app.MapOpenApi();
             app.MapScalarApiReference(options =>
             {
-                options.Title = "ECommerceApp.RyanW84 API (Development)";
+                // Enhanced Configuration
+                options.Title = "ECommerceApp.RyanW84 API Documentation";
                 options.Theme = ScalarTheme.BluePlanet;
                 options.Layout = ScalarLayout.Modern;
                 options.DarkMode = true;
+
+                // API Client Configuration
+                options.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+
+                // UI Customization
+                options.HideModels = false;
+                options.ShowSidebar = true;
+                options.DefaultOpenAllTags = false;
+
+                // Search Configuration
+                options.SearchHotKey = "k";
+
+                // Custom Styling
+                options.CustomCss = @"
+                    .scalar-api-reference {
+                        --scalar-color-primary: #2563eb;
+                        --scalar-color-secondary: #64748b;
+                        --scalar-color-accent: #06b6d4;
+                    }
+                    .dark-mode .scalar-api-reference {
+                        --scalar-color-background: #0f172a;
+                        --scalar-color-1: #4e668dff;
+                        --scalar-color-2: #67778fff;
+                        --scalar-color-3: #6d809bff;
+                    }
+                ";
             });
         }
         else
