@@ -23,4 +23,11 @@ public interface IProductRepository
     Task<ApiResponseDto<bool>> DeleteAsync(int id,
         CancellationToken cancellationToken = default
     );
+    Task<ApiResponseDto<bool>> RestoreAsync(int id,
+        CancellationToken cancellationToken = default
+    );
+    Task<ApiResponseDto<List<Product>>> GetDeletedProductsAsync(CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<bool>> HardDeleteAsync(int id,
+        CancellationToken cancellationToken = default
+    );
 }

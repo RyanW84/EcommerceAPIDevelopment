@@ -103,7 +103,7 @@ public class Program
                 // UI Customization
                 options.HideModels = false;
                 options.ShowSidebar = true;
-                options.DefaultOpenAllTags = false;
+                options.DefaultOpenAllTags = true;
 
                 // Search Configuration
                 options.SearchHotKey = "k";

@@ -30,4 +30,11 @@ public interface ICategoryRepository
        int id,
         CancellationToken cancellationToken = default
     );
+    Task<ApiResponseDto<bool>> RestoreAsync(int id,
+        CancellationToken cancellationToken = default
+    );
+    Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<bool>> HardDeleteAsync(int id,
+        CancellationToken cancellationToken = default
+    );
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ECommerceApp.RyanW84.Data.Models;
 
-public class Product
+public class Product : BaseEntity
 {
     public int ProductId { get; set; }
     public required string Name { get; set; } = null!;

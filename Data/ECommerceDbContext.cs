@@ -84,6 +84,12 @@ public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : 
             entity.Property(si => si.Quantity).IsRequired();
             entity.Property(si => si.UnitPrice).IsRequired().HasPrecision(18, 2);
         });
+
+        // Global query filters for soft delete
+        modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
+        modelBuilder.Entity<Category>().HasQueryFilter(c => !c.IsDeleted);
+        // Filter out SaleItems that reference soft-deleted products
+        modelBuilder.Entity<SaleItem>().HasQueryFilter(si => !si.Product.IsDeleted);
     }
 
     public void SeedData()

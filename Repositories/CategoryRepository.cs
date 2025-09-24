@@ -198,12 +198,145 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
                     Data = false,
                 };
             }
-            _db.Categories.Remove(category);
+
+            // Soft delete: mark as deleted instead of removing
+            category.IsDeleted = true;
+            category.DeletedAt = DateTime.UtcNow;
+
             await _db.SaveChangesAsync(cancellationToken);
             return new ApiResponseDto<bool>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = true,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = false,
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<bool>> RestoreAsync(int id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var category = await _db.Categories
+                .IgnoreQueryFilters() // Include soft-deleted items
+                .FirstOrDefaultAsync(c => c.CategoryId == id, cancellationToken);
+
+            if (category == null)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.NotFound,
+                    ErrorMessage = "Category not found",
+                    Data = false,
+                };
+            }
+
+            if (!category.IsDeleted)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.BadRequest,
+                    ErrorMessage = "Category is not deleted",
+                    Data = false,
+                };
+            }
+
+            // Restore the category
+            category.IsDeleted = false;
+            category.DeletedAt = null;
+
+            await _db.SaveChangesAsync(cancellationToken);
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = true,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = false,
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var deletedCategories = await _db
+                .Categories
+                .IgnoreQueryFilters() // Include soft-deleted items
+                .Where(c => c.IsDeleted)
+                .Include(c => c.Products)
+                .Include(c => c.Sales)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+
+            return new ApiResponseDto<List<Category>>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = deletedCategories,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<List<Category>>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = null,
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<bool>> HardDeleteAsync(int id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var category = await _db.Categories
+                .IgnoreQueryFilters() // Include soft-deleted items
+                .FirstOrDefaultAsync(c => c.CategoryId == id, cancellationToken);
+
+            if (category == null)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.NotFound,
+                    ErrorMessage = "Category not found",
+                    Data = false,
+                };
+            }
+
+            _db.Categories.Remove(category);
+            await _db.SaveChangesAsync(cancellationToken);
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.NoContent,
                 ErrorMessage = string.Empty,
                 Data = true,
             };

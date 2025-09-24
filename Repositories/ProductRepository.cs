@@ -166,6 +166,138 @@ namespace ECommerceApp.RyanW84.Repositories
                         Data = false,
                     };
                 }
+
+                // Soft delete: mark as deleted instead of removing
+                product.IsDeleted = true;
+                product.DeletedAt = DateTime.UtcNow;
+
+                await _db.SaveChangesAsync(cancellationToken);
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = false,
+                    ResponseCode = HttpStatusCode.NoContent,
+                    ErrorMessage = string.Empty,
+                    Data = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.InternalServerError,
+                    ErrorMessage = ex.Message,
+                    Data = false,
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto<bool>> RestoreAsync(int id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var product = await _db.Products
+                    .IgnoreQueryFilters() // Include soft-deleted items
+                    .FirstOrDefaultAsync(p => p.ProductId == id, cancellationToken);
+
+                if (product == null)
+                {
+                    return new ApiResponseDto<bool>
+                    {
+                        RequestFailed = true,
+                        ResponseCode = HttpStatusCode.NotFound,
+                        ErrorMessage = "Product not found",
+                        Data = false,
+                    };
+                }
+
+                if (!product.IsDeleted)
+                {
+                    return new ApiResponseDto<bool>
+                    {
+                        RequestFailed = true,
+                        ResponseCode = HttpStatusCode.BadRequest,
+                        ErrorMessage = "Product is not deleted",
+                        Data = false,
+                    };
+                }
+
+                // Restore the product
+                product.IsDeleted = false;
+                product.DeletedAt = null;
+
+                await _db.SaveChangesAsync(cancellationToken);
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = false,
+                    ResponseCode = HttpStatusCode.OK,
+                    ErrorMessage = string.Empty,
+                    Data = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.InternalServerError,
+                    ErrorMessage = ex.Message,
+                    Data = false,
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto<List<Product>>> GetDeletedProductsAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var deletedProducts = await _db
+                    .Products
+                    .IgnoreQueryFilters() // Include soft-deleted items
+                    .Where(p => p.IsDeleted)
+                    .Include(p => p.Category)
+                    .AsNoTracking()
+                    .ToListAsync(cancellationToken);
+
+                return new ApiResponseDto<List<Product>>
+                {
+                    RequestFailed = false,
+                    ResponseCode = HttpStatusCode.OK,
+                    ErrorMessage = string.Empty,
+                    Data = deletedProducts,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto<List<Product>>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.InternalServerError,
+                    ErrorMessage = ex.Message,
+                    Data = null,
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto<bool>> HardDeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var product = await _db.Products
+                    .IgnoreQueryFilters() // Include soft-deleted items
+                    .FirstOrDefaultAsync(p => p.ProductId == id, cancellationToken);
+
+                if (product == null)
+                {
+                    return new ApiResponseDto<bool>
+                    {
+                        RequestFailed = true,
+                        ResponseCode = HttpStatusCode.NotFound,
+                        ErrorMessage = "Product not found",
+                        Data = false,
+                    };
+                }
+
                 _db.Products.Remove(product);
                 await _db.SaveChangesAsync(cancellationToken);
                 return new ApiResponseDto<bool>
