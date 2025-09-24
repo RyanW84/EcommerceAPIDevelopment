@@ -1,16 +1,16 @@
 using ECommerceApp.RyanW84.Data.DTO;
 using ECommerceApp.RyanW84.Data.Models;
-using ECommerceApp.RyanW84.Services;
-
 
 namespace ECommerceApp.RyanW84.Interfaces;
 
 public interface IProductService
 {
-    // Define methods for product management
-    Task CreateProductAsync();
+    Task<ApiResponseDto<Product>> CreateProductAsync(ApiRequestDto<Product> request, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<List<Product>>> GetProductsAsync();
-    Task GetProductFromSelectionPromptAsync(string prompt);
-    Task UpdateProductAsync();
-    Task DeleteProductAsync();
+    Task<ApiResponseDto<Product?>> GetProductByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<List<Product>>> GetProductsByCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<Product>> UpdateProductAsync(int id, ApiRequestDto<Product> request, CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<bool>> DeleteProductAsync(int id, CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<List<Product>>> GetDeletedProductsAsync(CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<bool>> RestoreProductAsync(int id, CancellationToken cancellationToken = default);
 }

@@ -255,4 +255,70 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             Data = repoResult.Data,
         };
     }
+
+    public async Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var result = await _categoryRepository.GetDeletedCategoriesAsync(cancellationToken);
+            if (result.RequestFailed)
+            {
+                return new ApiResponseDto<List<Category>>
+                {
+                    RequestFailed = true,
+                    ResponseCode = result.ResponseCode,
+                    ErrorMessage = result.ErrorMessage
+                };
+            }
+
+            return new ApiResponseDto<List<Category>>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                Data = result.Data
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<List<Category>>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = $"Failed to retrieve deleted categories: {ex.Message}"
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<bool>> RestoreCategoryAsync(int id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var result = await _categoryRepository.RestoreAsync(id, cancellationToken);
+            if (result.RequestFailed)
+            {
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = result.ResponseCode,
+                    ErrorMessage = result.ErrorMessage
+                };
+            }
+
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                Data = result.Data
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = $"Failed to restore category: {ex.Message}"
+            };
+        }
+    }
 }
