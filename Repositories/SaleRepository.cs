@@ -175,4 +175,92 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
             };
         }
     }
+
+    public async Task<ApiResponseDto<Sale?>> GetByIdWithHistoricalProductsAsync(
+        int id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            var sale = await _db
+                .Sales.AsNoTracking()
+                .Include(s => s.SaleItems).ThenInclude(si => si.Product)
+                .Include(s => s.Categories)
+                .IgnoreQueryFilters() // Include deleted products
+                .FirstOrDefaultAsync(s => s.SaleId == id, cancellationToken);
+
+            // Filter SaleItems to only include products that were available at the time of sale
+            if (sale != null && sale.SaleItems != null)
+            {
+                var saleDate = sale.SaleDate;
+                sale.SaleItems = sale.SaleItems
+                    .Where(si => si.Product != null && (!si.Product.IsDeleted || si.Product.DeletedAt > saleDate))
+                    .ToList();
+            }
+
+            return new ApiResponseDto<Sale?>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = sale,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<Sale?>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = null,
+            };
+        }
+    }
+
+    public async Task<ApiResponseDto<List<Sale>>> GetHistoricalSalesAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        try
+        {
+            var list = await _db
+                .Sales.AsNoTracking()
+                .Include(s => s.SaleItems).ThenInclude(si => si.Product)
+                .Include(s => s.Categories)
+                .IgnoreQueryFilters() // Include deleted products
+                .ToListAsync(cancellationToken);
+
+            // Filter SaleItems for each sale to only include products that were available at the time of sale
+            foreach (var sale in list)
+            {
+                if (sale.SaleItems != null)
+                {
+                    var saleDate = sale.SaleDate;
+                    sale.SaleItems = sale.SaleItems
+                        .Where(si => si.Product != null && (!si.Product.IsDeleted || si.Product.DeletedAt > saleDate))
+                        .ToList();
+                }
+            }
+
+            return new ApiResponseDto<List<Sale>>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                ErrorMessage = string.Empty,
+                Data = list,
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponseDto<List<Sale>>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = ex.Message,
+                Data = [],
+            };
+        }
+    }
 }

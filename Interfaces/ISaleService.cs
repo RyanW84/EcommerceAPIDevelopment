@@ -11,4 +11,6 @@ public interface ISaleService
     Task<ApiResponseDto<Sale>> CreateSaleAsync(ApiRequestDto<Sale> request, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Sale>> GetSaleByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<List<Sale>>> GetSalesAsync(CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<Sale>> GetSaleByIdWithHistoricalProductsAsync(int id, CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<List<Sale>>> GetHistoricalSalesAsync(CancellationToken cancellationToken = default);
 }

@@ -156,4 +156,69 @@ public class SaleService(ECommerceDbContext db) : ISaleService
             Data = list
         };
     }
+
+    public async Task<ApiResponseDto<Sale>> GetSaleByIdWithHistoricalProductsAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var sale = await _db.Sales
+            .AsNoTracking()
+            .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
+            .IgnoreQueryFilters() // Include deleted products
+            .FirstOrDefaultAsync(s => s.SaleId == id, cancellationToken);
+
+        if (sale is null)
+            return new ApiResponseDto<Sale>
+            {
+                RequestFailed = true,
+                ResponseCode = System.Net.HttpStatusCode.NotFound,
+                ErrorMessage = $"Sale {id} not found."
+            };
+
+        // Filter SaleItems to only include products that were available at the time of sale
+        if (sale.SaleItems != null)
+        {
+            var saleDate = sale.SaleDate;
+            sale.SaleItems = sale.SaleItems
+                .Where(si => si.Product != null && (!si.Product.IsDeleted || si.Product.DeletedAt > saleDate))
+                .ToList();
+        }
+
+        return new ApiResponseDto<Sale>
+        {
+            RequestFailed = false,
+            ResponseCode = System.Net.HttpStatusCode.OK,
+            ErrorMessage = string.Empty,
+            Data = sale
+        };
+    }
+
+    public async Task<ApiResponseDto<System.Collections.Generic.List<Sale>>> GetHistoricalSalesAsync(CancellationToken cancellationToken = default)
+    {
+        var list = await _db.Sales
+            .AsNoTracking()
+            .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
+            .IgnoreQueryFilters() // Include deleted products
+            .ToListAsync(cancellationToken);
+
+        // Filter SaleItems for each sale to only include products that were available at the time of sale
+        foreach (var sale in list)
+        {
+            if (sale.SaleItems != null)
+            {
+                var saleDate = sale.SaleDate;
+                sale.SaleItems = sale.SaleItems
+                    .Where(si => si.Product != null && (!si.Product.IsDeleted || si.Product.DeletedAt > saleDate))
+                    .ToList();
+            }
+        }
+
+        return new ApiResponseDto<System.Collections.Generic.List<Sale>>
+        {
+            RequestFailed = false,
+            ResponseCode = System.Net.HttpStatusCode.OK,
+            ErrorMessage = string.Empty,
+            Data = list
+        };
+    }
 }

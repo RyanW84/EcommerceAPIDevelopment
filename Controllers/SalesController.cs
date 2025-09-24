@@ -42,4 +42,20 @@ public class SalesController : ControllerBase
         if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
         return Ok(result.Data);
     }
+
+    [HttpGet("with-deleted-products")]
+    public async Task<IActionResult> GetAllWithDeletedProducts(CancellationToken cancellationToken)
+    {
+        var result = await _saleService.GetHistoricalSalesAsync(cancellationToken);
+        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        return Ok(result.Data);
+    }
+
+    [HttpGet("{id:int}/with-deleted-products")]
+    public async Task<IActionResult> GetByIdWithDeletedProducts(int id, CancellationToken cancellationToken)
+    {
+        var result = await _saleService.GetSaleByIdWithHistoricalProductsAsync(id, cancellationToken);
+        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        return Ok(result.Data);
+    }
 }

@@ -22,4 +22,11 @@ public interface ISaleRepository
     Task<ApiResponseDto<bool>> DeleteAsync(int id,
         CancellationToken cancellationToken = default
     );
+    Task<ApiResponseDto<Sale?>> GetByIdWithHistoricalProductsAsync(
+        int id,
+        CancellationToken cancellationToken = default
+    );
+    Task<ApiResponseDto<List<Sale>>> GetHistoricalSalesAsync(
+        CancellationToken cancellationToken = default
+    );
 }
