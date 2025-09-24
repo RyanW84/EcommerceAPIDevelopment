@@ -94,6 +94,8 @@
         "buildtransitive",
         "contentfiles",
         "datetimeoffset",
+        "localdb",
+        "mssqllocaldb",
         "nvarchar",
         "onprem",
         "previewlanguage",
