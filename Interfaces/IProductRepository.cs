@@ -10,7 +10,7 @@ public interface IProductRepository
         int id,
         CancellationToken cancellationToken = default
     );
-    Task<ApiResponseDto<List<Product>>> GetAllProductsAsync(CancellationToken cancellationToken = default);
+    Task<PaginatedResponseDto<List<Product>>> GetAllProductsAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Product>> AddAsync(
         Product entity,
         CancellationToken cancellationToken = default

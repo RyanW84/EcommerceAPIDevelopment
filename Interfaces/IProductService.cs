@@ -6,7 +6,7 @@ namespace ECommerceApp.RyanW84.Interfaces;
 public interface IProductService
 {
     Task<ApiResponseDto<Product>> CreateProductAsync(ApiRequestDto<Product> request, CancellationToken cancellationToken = default);
-    Task<ApiResponseDto<List<Product>>> GetProductsAsync();
+    Task<PaginatedResponseDto<List<Product>>> GetProductsAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Product?>> GetProductByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<List<Product>>> GetProductsByCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Product>> UpdateProductAsync(int id, ApiRequestDto<Product> request, CancellationToken cancellationToken = default);

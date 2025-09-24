@@ -3,6 +3,7 @@ using ECommerceApp.RyanW84.Interfaces;
 using ECommerceApp.RyanW84.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using System.Runtime.InteropServices;
 
 namespace ECommerceApp.RyanW84;
 
@@ -33,8 +34,22 @@ public class Program
         builder.Services.AddOpenApi();
 
         // Configure database context
+        string connectionString;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            connectionString = "Server=(localdb)\\mssqllocaldb;Database=ECommerceDb;Trusted_Connection=True;";
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        }
+        else
+        {
+            throw new PlatformNotSupportedException("Unsupported OS platform.");
+        }
+
         builder.Services.AddDbContext<Data.ECommerceDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+            options.UseSqlServer(connectionString)
         );
         // Register application services
         builder.Services.AddScoped<IProductService, ProductService>();
@@ -43,6 +58,7 @@ public class Program
         builder.Services.AddScoped<ISalesSummaryService, SalesSummaryService>();
         builder.Services.AddScoped<IProductRepository, Repositories.ProductRepository>();
         builder.Services.AddScoped<ICategoryRepository, Repositories.CategoryRepository>();
+        builder.Services.AddScoped<ISaleRepository, Repositories.SaleRepository>();
 
         var app = builder.Build();
 
@@ -58,19 +74,10 @@ public class Program
                 // Seed data in Development environment if database is empty
                 if (app.Environment.IsDevelopment())
                 {
-                    // Check if data already exists to avoid re-seeding
-                    if (!db.Categories.Any())
-                    {
-                        db.SeedData();
-                        db.SaveChanges();
-                        app.Logger.LogInformation("Database seeded with initial data.");
-                    }
-                    else
-                    {
-                        app.Logger.LogInformation(
-                            "Database already contains data, skipping seeding."
-                        );
-                    }
+                    // Force reseeding for testing
+                    db.SeedData();
+                    db.SaveChanges();
+                    app.Logger.LogInformation("Database seeded with initial data.");
                 }
             }
             catch (Exception ex)

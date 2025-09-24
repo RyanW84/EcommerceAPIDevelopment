@@ -89,6 +89,14 @@
     },
     "dotnet.unitTestDebuggingOptions": {},
     "cSpell.words": [
-        "ASPNETCORE"
+        "Anytown",
+        "ASPNETCORE",
+        "buildtransitive",
+        "contentfiles",
+        "datetimeoffset",
+        "nvarchar",
+        "onprem",
+        "previewlanguage",
+        "Swashbuckle"
     ]
 }

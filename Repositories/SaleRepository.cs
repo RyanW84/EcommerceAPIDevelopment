@@ -44,34 +44,49 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         }
     }
 
-    public async Task<ApiResponseDto<List<Sale>>> GetAllSalesAsync(
-        CancellationToken cancellationToken = default
-    )
+    public async Task<PaginatedResponseDto<List<Sale>>> GetAllSalesAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
         try
         {
-            var list = await _db
+            // Ensure valid pagination parameters
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+            if (pageSize > 100) pageSize = 100; // Max page size limit
+
+            var query = _db
                 .Sales.AsNoTracking()
                 .Include(s => s.SaleItems).ThenInclude(si => si.Product)
-                .Include(s => s.Categories)
+                .Include(s => s.Categories);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+            var sales = await query
+                .OrderByDescending(s => s.SaleDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
-            return new ApiResponseDto<List<Sale>>
+            return new PaginatedResponseDto<List<Sale>>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
                 ErrorMessage = string.Empty,
-                Data = list,
+                Data = sales,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalCount = totalCount
             };
         }
         catch (Exception ex)
         {
-            return new ApiResponseDto<List<Sale>>
+            return new PaginatedResponseDto<List<Sale>>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
                 ErrorMessage = ex.Message,
                 Data = [],
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalCount = 0
             };
         }
     }

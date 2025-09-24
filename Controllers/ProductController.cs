@@ -15,13 +15,11 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // GET /api/products
     [HttpGet]
-    public async Task<IActionResult> GetProductsAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetProductsAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
     {
-        // For now, we'll return all products and let the client handle pagination
-        // In a future enhancement, we could implement server-side pagination
-        var result = await _productService.GetProductsAsync();
+        var result = await _productService.GetProductsAsync(page, pageSize, cancellationToken);
         if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     // GET /api/products/{id}

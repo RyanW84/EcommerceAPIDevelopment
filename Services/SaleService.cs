@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
 using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Data.DTO;
 using ECommerceApp.RyanW84.Data.Models;
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.RyanW84.Services;
 
-public class SaleService(ECommerceDbContext db) : ISaleService
+public class SaleService(ECommerceDbContext db, ISaleRepository saleRepository) : ISaleService
 {
     private readonly ECommerceDbContext _db = db;
+    private readonly ISaleRepository _saleRepository = saleRepository;
 
     public async Task<ApiResponseDto<Sale>> CreateSaleAsync(ApiRequestDto<Sale> request, CancellationToken cancellationToken = default)
     {
@@ -140,21 +142,46 @@ public class SaleService(ECommerceDbContext db) : ISaleService
         };
     }
 
-    public async Task<ApiResponseDto<System.Collections.Generic.List<Sale>>> GetSalesAsync(CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponseDto<List<Sale>>> GetSalesAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
-        var list = await _db.Sales
-            .AsNoTracking()
-            .Include(s => s.SaleItems)
-                .ThenInclude(si => si.Product)
-            .ToListAsync(cancellationToken);
-
-        return new ApiResponseDto<System.Collections.Generic.List<Sale>>
+        try
         {
-            RequestFailed = false,
-            ResponseCode = System.Net.HttpStatusCode.OK,
-            ErrorMessage = string.Empty,
-            Data = list
-        };
+            var result = await _saleRepository.GetAllSalesAsync(page, pageSize, cancellationToken);
+            if (result.RequestFailed)
+            {
+                return new PaginatedResponseDto<List<Sale>>
+                {
+                    RequestFailed = true,
+                    ResponseCode = result.ResponseCode,
+                    ErrorMessage = result.ErrorMessage,
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalCount = 0
+                };
+            }
+
+            return new PaginatedResponseDto<List<Sale>>
+            {
+                RequestFailed = false,
+                ResponseCode = HttpStatusCode.OK,
+                Data = result.Data,
+                CurrentPage = result.CurrentPage,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount
+            };
+        }
+        catch (Exception ex)
+        {
+            return new PaginatedResponseDto<List<Sale>>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.InternalServerError,
+                ErrorMessage = $"Failed to retrieve sales: {ex.Message}",
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalCount = 0
+            };
+        }
     }
 
     public async Task<ApiResponseDto<Sale>> GetSaleByIdWithHistoricalProductsAsync(int id, CancellationToken cancellationToken = default)

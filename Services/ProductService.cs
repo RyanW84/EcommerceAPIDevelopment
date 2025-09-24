@@ -52,35 +52,44 @@ namespace ECommerceApp.RyanW84.Services
             }
         }
 
-        public async Task<ApiResponseDto<List<Product>>> GetProductsAsync()
+        public async Task<PaginatedResponseDto<List<Product>>> GetProductsAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
         {
             try
             {
-                var result = await _productRepository.GetAllProductsAsync();
+                var result = await _productRepository.GetAllProductsAsync(page, pageSize, cancellationToken);
                 if (result.RequestFailed)
                 {
-                    return new ApiResponseDto<List<Product>>
+                    return new PaginatedResponseDto<List<Product>>
                     {
                         RequestFailed = true,
                         ResponseCode = result.ResponseCode,
-                        ErrorMessage = result.ErrorMessage
+                        ErrorMessage = result.ErrorMessage,
+                        CurrentPage = page,
+                        PageSize = pageSize,
+                        TotalCount = 0
                     };
                 }
 
-                return new ApiResponseDto<List<Product>>
+                return new PaginatedResponseDto<List<Product>>
                 {
                     RequestFailed = false,
                     ResponseCode = HttpStatusCode.OK,
-                    Data = result.Data
+                    Data = result.Data,
+                    CurrentPage = result.CurrentPage,
+                    PageSize = result.PageSize,
+                    TotalCount = result.TotalCount
                 };
             }
             catch (Exception ex)
             {
-                return new ApiResponseDto<List<Product>>
+                return new PaginatedResponseDto<List<Product>>
                 {
                     RequestFailed = true,
                     ResponseCode = HttpStatusCode.InternalServerError,
-                    ErrorMessage = $"Failed to retrieve products: {ex.Message}"
+                    ErrorMessage = $"Failed to retrieve products: {ex.Message}",
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalCount = 0
                 };
             }
         }

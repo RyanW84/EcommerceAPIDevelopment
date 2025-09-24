@@ -68,30 +68,48 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<ApiResponseDto<List<Product>>> GetAllProductsAsync(CancellationToken cancellationToken = default)
+        public async Task<PaginatedResponseDto<List<Product>>> GetAllProductsAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
         {
             try
             {
-                var products = await _db
+                // Ensure valid pagination parameters
+                if (page < 1) page = 1;
+                if (pageSize < 1) pageSize = 10;
+                if (pageSize > 100) pageSize = 100; // Max page size limit
+
+                var query = _db
                     .Products.AsNoTracking()
-                    .Include(p => p.Category)
+                    .Include(p => p.Category);
+
+                var totalCount = await query.CountAsync(cancellationToken);
+                var products = await query
+                    .OrderBy(p => p.ProductId)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
                     .ToListAsync(cancellationToken);
-                return new ApiResponseDto<List<Product>>
+
+                return new PaginatedResponseDto<List<Product>>
                 {
                     RequestFailed = false,
                     ResponseCode = HttpStatusCode.OK,
                     ErrorMessage = string.Empty,
                     Data = products,
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
                 };
             }
             catch (Exception ex)
             {
-                return new ApiResponseDto<List<Product>>
+                return new PaginatedResponseDto<List<Product>>
                 {
                     RequestFailed = true,
                     ResponseCode = HttpStatusCode.InternalServerError,
                     ErrorMessage = ex.Message,
                     Data = null,
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalCount = 0
                 };
             }
         }
