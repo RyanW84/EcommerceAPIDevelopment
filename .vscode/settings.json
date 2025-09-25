@@ -90,6 +90,7 @@
     "dotnet.unitTestDebuggingOptions": {},
     "cSpell.words": [
         "Anytown",
+        "appsettings",
         "ASPNETCORE",
         "buildtransitive",
         "Clientside",
