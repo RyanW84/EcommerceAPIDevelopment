@@ -6,6 +6,7 @@ public class ApiResponse<T>
     public int ResponseCode { get; set; }
     public string ErrorMessage { get; set; } = string.Empty;
     public T? Data { get; set; }
+    public bool Success => !RequestFailed;
 }
 
 public class PaginatedResponse<T>
@@ -20,6 +21,7 @@ public class PaginatedResponse<T>
     public int TotalPages { get; set; }
     public bool HasNextPage { get; set; }
     public bool HasPreviousPage { get; set; }
+    public bool Success => !RequestFailed;
 }
 
 public class Product
@@ -83,6 +85,8 @@ public record ProductQuery(
 );
 
 public record CategoryQuery(
+    int Page = 1,
+    int PageSize = 10,
     string? Search = null,
     string? SortBy = null,
     string? SortDirection = null,

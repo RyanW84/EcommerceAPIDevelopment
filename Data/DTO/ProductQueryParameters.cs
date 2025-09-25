@@ -2,7 +2,7 @@ namespace ECommerceApp.RyanW84.Data.DTO;
 
 public class ProductQueryParameters
 {
-    private const int MaxPageSize = 100;
+    private const int MaxPageSize = 32;
 
     private int _page = 1;
     private int _pageSize = 10;

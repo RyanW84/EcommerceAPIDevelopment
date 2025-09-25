@@ -6,6 +6,7 @@ using ECommerceApp.RyanW84.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Sqlite;
 using Scalar.AspNetCore;
 using System.Runtime.InteropServices;
 
@@ -59,8 +60,20 @@ public class Program
         }
 
         builder.Services.AddDbContext<Data.ECommerceDbContext>(options =>
-            options.UseSqlServer(connectionString)
-        );
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                options.UseSqlServer(connectionString);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                options.UseSqlite(connectionString);
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Unsupported OS platform.");
+            }
+        });
         // Register application services
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();

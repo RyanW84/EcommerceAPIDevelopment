@@ -35,7 +35,7 @@ public class CategoriesController : ControllerBase
 
         var result = await _categoryService.GetAllCategoriesAsync(queryParameters, cancellationToken);
         if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     // GET /api/categories/{id}

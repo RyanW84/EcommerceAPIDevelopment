@@ -95,6 +95,17 @@ public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : 
 
     public void SeedData()
     {
+        // Check if data already exists
+        if (Categories.Any() || Products.Any() || Sales.Any())
+        {
+            // Data already exists, clear it first
+            Sales.RemoveRange(Sales);
+            SaleItems.RemoveRange(SaleItems);
+            Products.RemoveRange(Products);
+            Categories.RemoveRange(Categories);
+            SaveChanges();
+        }
+
         // Seed Categories - Let Entity Framework auto-generate IDs
         var electronics = new Category { Name = "Electronics", Description = "Electronic devices and gadgets" };
         var clothing = new Category { Name = "Clothing", Description = "Apparel and fashion items" };
