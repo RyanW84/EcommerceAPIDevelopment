@@ -25,13 +25,36 @@ namespace ECommerceApp.RyanW84.Repositories
                     Data = entity,
                 };
             }
+            catch (DbUpdateException ex)
+            {
+                // Handle constraint violations, foreign key errors, etc.
+                if (ex.InnerException?.Message.Contains("FOREIGN KEY") == true ||
+                    ex.InnerException?.Message.Contains("constraint") == true)
+                {
+                    return new ApiResponseDto<Product>
+                    {
+                        RequestFailed = true,
+                        ResponseCode = HttpStatusCode.BadRequest,
+                        ErrorMessage = "Invalid data: Foreign key constraint violation or invalid reference.",
+                        Data = null,
+                    };
+                }
+
+                return new ApiResponseDto<Product>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.Conflict,
+                    ErrorMessage = "Failed to save product due to data conflict.",
+                    Data = null,
+                };
+            }
             catch (Exception ex)
             {
                 return new ApiResponseDto<Product>
                 {
                     RequestFailed = true,
                     ResponseCode = HttpStatusCode.InternalServerError,
-                    ErrorMessage = ex.Message,
+                    ErrorMessage = $"Failed to create product: {ex.Message}",
                     Data = null,
                 };
             }
@@ -157,13 +180,45 @@ namespace ECommerceApp.RyanW84.Repositories
                     Data = entity,
                 };
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ApiResponseDto<Product>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.Conflict,
+                    ErrorMessage = "Product was modified by another user. Please refresh and try again.",
+                    Data = null,
+                };
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("FOREIGN KEY") == true ||
+                    ex.InnerException?.Message.Contains("constraint") == true)
+                {
+                    return new ApiResponseDto<Product>
+                    {
+                        RequestFailed = true,
+                        ResponseCode = HttpStatusCode.BadRequest,
+                        ErrorMessage = "Invalid data: Foreign key constraint violation or invalid reference.",
+                        Data = null,
+                    };
+                }
+
+                return new ApiResponseDto<Product>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.Conflict,
+                    ErrorMessage = "Failed to update product due to data conflict.",
+                    Data = null,
+                };
+            }
             catch (Exception ex)
             {
                 return new ApiResponseDto<Product>
                 {
                     RequestFailed = true,
                     ResponseCode = HttpStatusCode.InternalServerError,
-                    ErrorMessage = ex.Message,
+                    ErrorMessage = $"Failed to update product: {ex.Message}",
                     Data = null,
                 };
             }
@@ -198,13 +253,36 @@ namespace ECommerceApp.RyanW84.Repositories
                     Data = true,
                 };
             }
+            catch (DbUpdateException ex)
+            {
+                // Handle cases where deletion fails due to foreign key constraints
+                if (ex.InnerException?.Message.Contains("FOREIGN KEY") == true ||
+                    ex.InnerException?.Message.Contains("constraint") == true)
+                {
+                    return new ApiResponseDto<bool>
+                    {
+                        RequestFailed = true,
+                        ResponseCode = HttpStatusCode.Conflict,
+                        ErrorMessage = "Cannot delete product as it is referenced by existing sales.",
+                        Data = false,
+                    };
+                }
+
+                return new ApiResponseDto<bool>
+                {
+                    RequestFailed = true,
+                    ResponseCode = HttpStatusCode.InternalServerError,
+                    ErrorMessage = "Failed to delete product due to database error.",
+                    Data = false,
+                };
+            }
             catch (Exception ex)
             {
                 return new ApiResponseDto<bool>
                 {
                     RequestFailed = true,
                     ResponseCode = HttpStatusCode.InternalServerError,
-                    ErrorMessage = ex.Message,
+                    ErrorMessage = $"Failed to delete product: {ex.Message}",
                     Data = false,
                 };
             }

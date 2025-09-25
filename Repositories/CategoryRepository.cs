@@ -138,13 +138,33 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
                 Data = entity,
             };
         }
-        catch (Exception ex)
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.Conflict,
+                ErrorMessage = "Concurrency conflict occurred while adding the category.",
+                Data = entity,
+            };
+        }
+        catch (DbUpdateException)
+        {
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.BadRequest,
+                ErrorMessage = "Failed to add category. Please check the data and try again.",
+                Data = entity,
+            };
+        }
+        catch (Exception)
         {
             return new ApiResponseDto<Category>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
-                ErrorMessage = ex.Message,
+                ErrorMessage = "An unexpected error occurred while adding the category.",
                 Data = entity,
             };
         }
@@ -168,13 +188,33 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
                 Data = entity,
             };
         }
-        catch (Exception ex)
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.Conflict,
+                ErrorMessage = "Concurrency conflict occurred while updating the category.",
+                Data = entity,
+            };
+        }
+        catch (DbUpdateException)
+        {
+            return new ApiResponseDto<Category>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.BadRequest,
+                ErrorMessage = "Failed to update category. Please check the data and try again.",
+                Data = entity,
+            };
+        }
+        catch (Exception)
         {
             return new ApiResponseDto<Category>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
-                ErrorMessage = ex.Message,
+                ErrorMessage = "An unexpected error occurred while updating the category.",
                 Data = entity,
             };
         }
@@ -212,13 +252,33 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
                 Data = true,
             };
         }
-        catch (Exception ex)
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.Conflict,
+                ErrorMessage = "Concurrency conflict occurred while deleting the category.",
+                Data = false,
+            };
+        }
+        catch (DbUpdateException)
+        {
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.BadRequest,
+                ErrorMessage = "Failed to delete category. Please try again.",
+                Data = false,
+            };
+        }
+        catch (Exception)
         {
             return new ApiResponseDto<bool>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
-                ErrorMessage = ex.Message,
+                ErrorMessage = "An unexpected error occurred while deleting the category.",
                 Data = false,
             };
         }

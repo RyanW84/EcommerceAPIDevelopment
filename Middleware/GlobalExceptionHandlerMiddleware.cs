@@ -36,26 +36,32 @@ public class GlobalExceptionHandlerMiddleware
     {
         context.Response.ContentType = "application/json";
 
+        var (statusCode, message) = exception switch
+        {
+            ArgumentNullException => ((int)HttpStatusCode.BadRequest, "Required parameter is missing."),
+            ArgumentOutOfRangeException => ((int)HttpStatusCode.BadRequest, "Parameter value is out of acceptable range."),
+            ArgumentException => ((int)HttpStatusCode.BadRequest, "Invalid argument provided."),
+            KeyNotFoundException => ((int)HttpStatusCode.NotFound, "The requested resource was not found."),
+            UnauthorizedAccessException => ((int)HttpStatusCode.Unauthorized, "Access is denied."),
+            InvalidOperationException => ((int)HttpStatusCode.BadRequest, "The operation is not valid in the current state."),
+            TimeoutException => ((int)HttpStatusCode.RequestTimeout, "The operation timed out."),
+            OperationCanceledException => ((int)HttpStatusCode.RequestTimeout, "The operation was cancelled."),
+            FormatException => ((int)HttpStatusCode.BadRequest, "Invalid data format."),
+            OverflowException => ((int)HttpStatusCode.BadRequest, "Numeric value is too large or too small."),
+            _ => ((int)HttpStatusCode.InternalServerError, "An unexpected error occurred. Please try again later.")
+        };
+
         var response = new
         {
             error = new
             {
-                message = "An unexpected error occurred. Please try again later.",
+                message = message,
                 type = exception.GetType().Name,
                 timestamp = DateTime.UtcNow
             }
         };
 
-        // Set appropriate status code based on exception type
-        context.Response.StatusCode = exception switch
-        {
-            ArgumentException => (int)HttpStatusCode.BadRequest,
-            KeyNotFoundException => (int)HttpStatusCode.NotFound,
-            UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
-            InvalidOperationException => (int)HttpStatusCode.BadRequest,
-            _ => (int)HttpStatusCode.InternalServerError
-        };
-
+        context.Response.StatusCode = statusCode;
         await context.Response.WriteAsync(JsonSerializer.Serialize(response, _jsonOptions));
     }
 }

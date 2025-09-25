@@ -109,13 +109,33 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
                 Data = entity,
             };
         }
-        catch (Exception ex)
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ApiResponseDto<Sale>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.Conflict,
+                ErrorMessage = "Concurrency conflict occurred while adding the sale.",
+                Data = null,
+            };
+        }
+        catch (DbUpdateException)
+        {
+            return new ApiResponseDto<Sale>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.BadRequest,
+                ErrorMessage = "Failed to add sale. Please check the data and try again.",
+                Data = null,
+            };
+        }
+        catch (Exception)
         {
             return new ApiResponseDto<Sale>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
-                ErrorMessage = ex.Message,
+                ErrorMessage = "An unexpected error occurred while adding the sale.",
                 Data = null,
             };
         }
@@ -139,13 +159,33 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
                 Data = entity,
             };
         }
-        catch (Exception ex)
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ApiResponseDto<Sale>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.Conflict,
+                ErrorMessage = "Concurrency conflict occurred while updating the sale.",
+                Data = null,
+            };
+        }
+        catch (DbUpdateException)
+        {
+            return new ApiResponseDto<Sale>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.BadRequest,
+                ErrorMessage = "Failed to update sale. Please check the data and try again.",
+                Data = null,
+            };
+        }
+        catch (Exception)
         {
             return new ApiResponseDto<Sale>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
-                ErrorMessage = ex.Message,
+                ErrorMessage = "An unexpected error occurred while updating the sale.",
                 Data = null,
             };
         }
@@ -179,13 +219,33 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
                 Data = true,
             };
         }
-        catch (Exception ex)
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.Conflict,
+                ErrorMessage = "Concurrency conflict occurred while deleting the sale.",
+                Data = false,
+            };
+        }
+        catch (DbUpdateException)
+        {
+            return new ApiResponseDto<bool>
+            {
+                RequestFailed = true,
+                ResponseCode = HttpStatusCode.BadRequest,
+                ErrorMessage = "Failed to delete sale. Please try again.",
+                Data = false,
+            };
+        }
+        catch (Exception)
         {
             return new ApiResponseDto<bool>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
-                ErrorMessage = ex.Message,
+                ErrorMessage = "An unexpected error occurred while deleting the sale.",
                 Data = false,
             };
         }

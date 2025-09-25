@@ -28,6 +28,7 @@ public class ProductController(IProductService productService) : ControllerBase
     {
         var result = await _productService.GetProductByIdAsync(id, cancellationToken);
         if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.Data == null) return NotFound("Product not found");
         return Ok(result.Data);
     }
 
