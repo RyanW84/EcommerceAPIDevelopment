@@ -47,7 +47,8 @@ public class SaleQueryParametersValidator : AbstractValidator<SaleQueryParameter
             .WithMessage($"Sort by must be one of the following values: {string.Join(", ", AllowedSortColumns)}.");
     }
 
-    private static bool BeValidSortDirection(string direction) =>
-        direction.Equals("asc", StringComparison.OrdinalIgnoreCase) ||
-        direction.Equals("desc", StringComparison.OrdinalIgnoreCase);
+    private static bool BeValidSortDirection(string? direction) =>
+        direction is not null &&
+        (direction.Equals("asc", StringComparison.OrdinalIgnoreCase) ||
+         direction.Equals("desc", StringComparison.OrdinalIgnoreCase));
 }

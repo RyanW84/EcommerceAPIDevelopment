@@ -58,13 +58,13 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
 
     public async Task<PaginatedResponseDto<List<Sale>>> GetAllSalesAsync(SaleQueryParameters parameters, CancellationToken cancellationToken = default)
     {
+        parameters ??= new SaleQueryParameters();
+
+        var page = Math.Max(parameters.Page, 1);
+        var pageSize = Math.Clamp(parameters.PageSize, 1, 100);
+
         try
         {
-            parameters ??= new SaleQueryParameters();
-
-            var page = Math.Max(parameters.Page, 1);
-            var pageSize = Math.Clamp(parameters.PageSize, 1, 100);
-
             var query = _db
                 .Sales.AsNoTracking()
                 .Include(s => s.SaleItems).ThenInclude(si => si.Product)

@@ -94,13 +94,13 @@ namespace ECommerceApp.RyanW84.Repositories
 
         public async Task<PaginatedResponseDto<List<Product>>> GetAllProductsAsync(ProductQueryParameters parameters, CancellationToken cancellationToken = default)
         {
+            parameters ??= new ProductQueryParameters();
+
+            var page = Math.Max(parameters.Page, 1);
+            var pageSize = Math.Clamp(parameters.PageSize, 1, 100);
+
             try
             {
-                parameters ??= new ProductQueryParameters();
-
-                var page = Math.Max(parameters.Page, 1);
-                var pageSize = Math.Clamp(parameters.PageSize, 1, 100);
-
                 var query = _db
                     .Products.AsNoTracking()
                     .Include(p => p.Category)
