@@ -247,7 +247,7 @@ namespace ECommerceApp.RyanW84.Services
                 return new ApiResponseDto<bool>
                 {
                     RequestFailed = false,
-                    ResponseCode = HttpStatusCode.OK,
+                    ResponseCode = HttpStatusCode.NoContent,
                     Data = result.Data
                 };
             }

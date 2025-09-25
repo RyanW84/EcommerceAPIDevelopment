@@ -22,7 +22,7 @@ public class SalesController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _saleService.CreateSaleAsync(request, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Data!.SaleId }, result.Data);
     }
@@ -31,7 +31,7 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var result = await _saleService.GetSaleByIdAsync(id, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -41,7 +41,7 @@ public class SalesController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _saleService.GetSalesAsync(queryParameters, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result);
     }
 
@@ -49,7 +49,7 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> GetAllWithDeletedProducts(CancellationToken cancellationToken)
     {
         var result = await _saleService.GetHistoricalSalesAsync(cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -57,7 +57,7 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> GetByIdWithDeletedProducts(int id, CancellationToken cancellationToken)
     {
         var result = await _saleService.GetSaleByIdWithHistoricalProductsAsync(id, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 }

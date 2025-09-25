@@ -20,7 +20,7 @@ public class ProductController(IProductService productService) : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _productService.GetProductsAsync(queryParameters, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result);
     }
 
@@ -29,8 +29,8 @@ public class ProductController(IProductService productService) : ControllerBase
     public async Task<IActionResult> GetProductById(int id, CancellationToken cancellationToken = default)
     {
         var result = await _productService.GetProductByIdAsync(id, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
-        if (result.Data == null) return NotFound("Product not found");
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
+        if (result.Data == null) return NotFound(new { message = "Product not found" });
         return Ok(result.Data);
     }
 
@@ -39,7 +39,7 @@ public class ProductController(IProductService productService) : ControllerBase
     public async Task<IActionResult> GetProductsByCategory(int categoryId, CancellationToken cancellationToken = default)
     {
         var result = await _productService.GetProductsByCategoryIdAsync(categoryId, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -50,7 +50,7 @@ public class ProductController(IProductService productService) : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _productService.CreateProductAsync(request, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
 
         return CreatedAtAction(nameof(GetProductById), new { id = result.Data!.ProductId }, result.Data);
     }
@@ -62,7 +62,7 @@ public class ProductController(IProductService productService) : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _productService.UpdateProductAsync(id, request, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -71,7 +71,7 @@ public class ProductController(IProductService productService) : ControllerBase
     public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken = default)
     {
         var result = await _productService.DeleteProductAsync(id, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return NoContent();
     }
 
@@ -80,7 +80,7 @@ public class ProductController(IProductService productService) : ControllerBase
     public async Task<IActionResult> GetDeletedProducts(CancellationToken cancellationToken = default)
     {
         var result = await _productService.GetDeletedProductsAsync(cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -89,7 +89,7 @@ public class ProductController(IProductService productService) : ControllerBase
     public async Task<IActionResult> RestoreProduct(int id, CancellationToken cancellationToken = default)
     {
         var result = await _productService.RestoreProductAsync(id, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 }

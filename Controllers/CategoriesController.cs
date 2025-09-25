@@ -22,7 +22,7 @@ public class CategoriesController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _categoryService.CreateCategoryAsync(request, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Data!.CategoryId }, result.Data);
     }
@@ -34,7 +34,7 @@ public class CategoriesController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _categoryService.GetAllCategoriesAsync(queryParameters, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result);
     }
 
@@ -43,7 +43,7 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var result = await _categoryService.GetCategoryAsync(id, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -52,7 +52,7 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> GetByName(string name, CancellationToken cancellationToken)
     {
         var result = await _categoryService.GetCategoryByNameAsync(name, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -63,7 +63,7 @@ public class CategoriesController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _categoryService.UpdateCategoryAsync(id, request, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -72,7 +72,7 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var result = await _categoryService.DeleteCategoryAsync(id, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return NoContent();
     }
 
@@ -81,7 +81,7 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> GetDeletedCategories(CancellationToken cancellationToken)
     {
         var result = await _categoryService.GetDeletedCategoriesAsync(cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
@@ -90,7 +90,7 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> Restore(int id, CancellationToken cancellationToken)
     {
         var result = await _categoryService.RestoreCategoryAsync(id, cancellationToken);
-        if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
+        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(new { message = "Category restored successfully" });
     }
 }

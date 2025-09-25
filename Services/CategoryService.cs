@@ -218,7 +218,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
         return new ApiResponseDto<bool>
         {
             RequestFailed = false,
-            ResponseCode = HttpStatusCode.OK,
+            ResponseCode = HttpStatusCode.NoContent,
             ErrorMessage = string.Empty,
             Data = true,
         };
