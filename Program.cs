@@ -2,6 +2,9 @@ using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Interfaces;
 using ECommerceApp.RyanW84.Middleware;
 using ECommerceApp.RyanW84.Services;
+using ECommerceApp.RyanW84.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using System.Runtime.InteropServices;
@@ -30,6 +33,12 @@ public class Program
                 // Optional: Make JSON more readable
                 options.JsonSerializerOptions.WriteIndented = true;
             });
+
+        builder.Services
+            .AddFluentValidationAutoValidation()
+            .AddFluentValidationClientsideAdapters();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<ProductValidator>();
 
         // Add Scalar for API documentation
         builder.Services.AddOpenApi();

@@ -92,13 +92,19 @@
         "Anytown",
         "ASPNETCORE",
         "buildtransitive",
+        "Clientside",
         "contentfiles",
+        "createdat",
+        "createdon",
+        "customername",
         "datetimeoffset",
         "localdb",
         "mssqllocaldb",
         "nvarchar",
         "onprem",
         "previewlanguage",
-        "Swashbuckle"
+        "projitems",
+        "Swashbuckle",
+        "totalamount"
     ]
 }
