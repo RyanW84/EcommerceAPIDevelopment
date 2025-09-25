@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Data.DTO;
@@ -91,22 +92,51 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<PaginatedResponseDto<List<Product>>> GetAllProductsAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+        public async Task<PaginatedResponseDto<List<Product>>> GetAllProductsAsync(ProductQueryParameters parameters, CancellationToken cancellationToken = default)
         {
             try
             {
-                // Ensure valid pagination parameters
-                if (page < 1) page = 1;
-                if (pageSize < 1) pageSize = 10;
-                if (pageSize > 100) pageSize = 100; // Max page size limit
+                parameters ??= new ProductQueryParameters();
+
+                var page = Math.Max(parameters.Page, 1);
+                var pageSize = Math.Clamp(parameters.PageSize, 1, 100);
 
                 var query = _db
                     .Products.AsNoTracking()
-                    .Include(p => p.Category);
+                    .Include(p => p.Category)
+                    .AsQueryable();
 
-                var totalCount = await query.CountAsync(cancellationToken);
-                var products = await query
-                    .OrderBy(p => p.ProductId)
+                var search = parameters.Search?.Trim();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var likePattern = $"%{search}%";
+                    query = query.Where(p =>
+                        EF.Functions.Like(p.Name, likePattern) ||
+                        EF.Functions.Like(p.Description, likePattern));
+                }
+
+                if (parameters.MinPrice is { } minPrice)
+                {
+                    query = query.Where(p => p.Price >= minPrice);
+                }
+
+                if (parameters.MaxPrice is { } maxPrice)
+                {
+                    query = query.Where(p => p.Price <= maxPrice);
+                }
+
+                if (parameters.CategoryId is { } categoryId)
+                {
+                    query = query.Where(p => p.CategoryId == categoryId);
+                }
+
+                var descending = string.Equals(parameters.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                var sortBy = parameters.SortBy?.Trim().ToLowerInvariant();
+
+                var orderedQuery = ApplyProductSorting(query, sortBy, descending);
+
+                var totalCount = await orderedQuery.CountAsync(cancellationToken);
+                var products = await orderedQuery
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync(cancellationToken);
@@ -135,6 +165,19 @@ namespace ECommerceApp.RyanW84.Repositories
                     TotalCount = 0
                 };
             }
+        }
+
+        private static IQueryable<Product> ApplyProductSorting(IQueryable<Product> query, string? sortBy, bool descending)
+        {
+            return sortBy switch
+            {
+                "name" => descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
+                "price" => descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
+                "createdat" => descending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
+                "stock" => descending ? query.OrderByDescending(p => p.Stock) : query.OrderBy(p => p.Stock),
+                "category" => descending ? query.OrderByDescending(p => p.Category.Name) : query.OrderBy(p => p.Category.Name),
+                _ => descending ? query.OrderByDescending(p => p.ProductId) : query.OrderBy(p => p.ProductId)
+            };
         }
 
         public async Task<ApiResponseDto<List<Product>>> GetProductsByCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)

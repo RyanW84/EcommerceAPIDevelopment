@@ -10,7 +10,7 @@ public interface ISaleRepository
         int id,
         CancellationToken cancellationToken = default
     );
-    Task<PaginatedResponseDto<List<Sale>>> GetAllSalesAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default);
+    Task<PaginatedResponseDto<List<Sale>>> GetAllSalesAsync(SaleQueryParameters parameters, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Sale>> AddAsync(
         Sale entity,
         CancellationToken cancellationToken = default

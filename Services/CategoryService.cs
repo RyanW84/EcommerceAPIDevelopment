@@ -89,10 +89,13 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
     }
 
     public async Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(
+        CategoryQueryParameters parameters,
         CancellationToken cancellationToken = default
     )
     {
-        var repoResult = await _categoryRepository.GetAllCategoriesAsync(cancellationToken);
+        parameters ??= new CategoryQueryParameters();
+
+        var repoResult = await _categoryRepository.GetAllCategoriesAsync(parameters, cancellationToken);
 
         if (repoResult.RequestFailed)
         {

@@ -36,9 +36,11 @@ public class SalesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAll([FromQuery] SaleQueryParameters queryParameters, CancellationToken cancellationToken = default)
     {
-        var result = await _saleService.GetSalesAsync(page, pageSize, cancellationToken);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var result = await _saleService.GetSalesAsync(queryParameters, cancellationToken);
         if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
         return Ok(result);
     }

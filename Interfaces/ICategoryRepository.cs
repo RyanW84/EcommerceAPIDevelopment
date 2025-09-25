@@ -17,7 +17,7 @@ public interface ICategoryRepository
         string name,
         CancellationToken cancellationToken = default
     );
-    Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(CategoryQueryParameters parameters, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Category>> AddAsync(
         Category entity,
         CancellationToken cancellationToken = default

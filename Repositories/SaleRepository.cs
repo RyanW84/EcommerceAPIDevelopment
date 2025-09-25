@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Data.DTO;
@@ -44,23 +45,61 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         }
     }
 
-    public async Task<PaginatedResponseDto<List<Sale>>> GetAllSalesAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    private static IQueryable<Sale> ApplySaleSorting(IQueryable<Sale> query, string? sortBy, bool descending)
+    {
+        return sortBy switch
+        {
+            "customername" => descending ? query.OrderByDescending(s => s.CustomerName) : query.OrderBy(s => s.CustomerName),
+            "totalamount" => descending ? query.OrderByDescending(s => s.TotalAmount) : query.OrderBy(s => s.TotalAmount),
+            "saledate" => descending ? query.OrderByDescending(s => s.SaleDate) : query.OrderBy(s => s.SaleDate),
+            _ => descending ? query.OrderByDescending(s => s.SaleDate) : query.OrderBy(s => s.SaleDate)
+        };
+    }
+
+    public async Task<PaginatedResponseDto<List<Sale>>> GetAllSalesAsync(SaleQueryParameters parameters, CancellationToken cancellationToken = default)
     {
         try
         {
-            // Ensure valid pagination parameters
-            if (page < 1) page = 1;
-            if (pageSize < 1) pageSize = 10;
-            if (pageSize > 100) pageSize = 100; // Max page size limit
+            parameters ??= new SaleQueryParameters();
+
+            var page = Math.Max(parameters.Page, 1);
+            var pageSize = Math.Clamp(parameters.PageSize, 1, 100);
 
             var query = _db
                 .Sales.AsNoTracking()
                 .Include(s => s.SaleItems).ThenInclude(si => si.Product)
-                .Include(s => s.Categories);
+                .Include(s => s.Categories)
+                .AsQueryable();
 
-            var totalCount = await query.CountAsync(cancellationToken);
-            var sales = await query
-                .OrderByDescending(s => s.SaleDate)
+            if (parameters.StartDate is { } startDate)
+            {
+                query = query.Where(s => s.SaleDate >= startDate);
+            }
+
+            if (parameters.EndDate is { } endDate)
+            {
+                query = query.Where(s => s.SaleDate <= endDate);
+            }
+
+            var customerName = parameters.CustomerName?.Trim();
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                var likePattern = $"%{customerName}%";
+                query = query.Where(s => EF.Functions.Like(s.CustomerName, likePattern));
+            }
+
+            var customerEmail = parameters.CustomerEmail?.Trim();
+            if (!string.IsNullOrEmpty(customerEmail))
+            {
+                query = query.Where(s => s.CustomerEmail == customerEmail);
+            }
+
+            var descending = string.Equals(parameters.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+            var sortBy = parameters.SortBy?.Trim().ToLowerInvariant();
+            var orderedQuery = ApplySaleSorting(query, sortBy, descending);
+
+            var totalCount = await orderedQuery.CountAsync(cancellationToken);
+            var sales = await orderedQuery
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);

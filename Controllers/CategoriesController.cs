@@ -29,9 +29,11 @@ public class CategoriesController : ControllerBase
 
     // GET /api/categories
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll([FromQuery] CategoryQueryParameters queryParameters, CancellationToken cancellationToken)
     {
-        var result = await _categoryService.GetAllCategoriesAsync(cancellationToken);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var result = await _categoryService.GetAllCategoriesAsync(queryParameters, cancellationToken);
         if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
         return Ok(result.Data);
     }

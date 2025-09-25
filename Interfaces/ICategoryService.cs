@@ -7,7 +7,7 @@ public interface ICategoryService
 {
     Task<ApiResponseDto<Category>> CreateCategoryAsync(ApiRequestDto<Category> request, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Category>> GetCategoryAsync(int id, CancellationToken cancellationToken = default);
-    Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(CategoryQueryParameters parameters, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Category>> UpdateCategoryAsync(int id, ApiRequestDto<Category> request, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<bool>> DeleteCategoryAsync(int id, CancellationToken cancellationToken = default);
     Task<ApiResponseDto<Category>> GetCategoryByNameAsync(string name, CancellationToken cancellationToken = default);

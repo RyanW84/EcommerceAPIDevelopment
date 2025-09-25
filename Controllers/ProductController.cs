@@ -15,9 +15,11 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // GET /api/products
     [HttpGet]
-    public async Task<IActionResult> GetProductsAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetProductsAsync([FromQuery] ProductQueryParameters queryParameters, CancellationToken cancellationToken = default)
     {
-        var result = await _productService.GetProductsAsync(page, pageSize, cancellationToken);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var result = await _productService.GetProductsAsync(queryParameters, cancellationToken);
         if (result.RequestFailed) return Problem(detail: result.ErrorMessage, statusCode: (int)result.ResponseCode);
         return Ok(result);
     }

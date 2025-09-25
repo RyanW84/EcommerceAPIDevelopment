@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Data.DTO;
@@ -90,15 +91,38 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
     }
 
     public async Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(
+        CategoryQueryParameters parameters,
         CancellationToken cancellationToken = default
     )
     {
         try
         {
-            var list = await _db
+            parameters ??= new CategoryQueryParameters();
+
+            var query = _db
                 .Categories.AsNoTracking()
                 .Include(c => c.Products)
-                .ToListAsync(cancellationToken);
+                .AsQueryable();
+
+            if (parameters.IncludeDeleted)
+            {
+                query = query.IgnoreQueryFilters();
+            }
+
+            var search = parameters.Search?.Trim();
+            if (!string.IsNullOrEmpty(search))
+            {
+                var likePattern = $"%{search}%";
+                query = query.Where(c =>
+                    EF.Functions.Like(c.Name, likePattern) ||
+                    EF.Functions.Like(c.Description, likePattern));
+            }
+
+            var descending = string.Equals(parameters.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+            var sortBy = parameters.SortBy?.Trim().ToLowerInvariant();
+            query = ApplyCategorySorting(query, sortBy, descending);
+
+            var list = await query.ToListAsync(cancellationToken);
 
             return new ApiResponseDto<List<Category>>
             {
@@ -118,6 +142,16 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
                 Data = [],
             };
         }
+    }
+
+    private static IQueryable<Category> ApplyCategorySorting(IQueryable<Category> query, string? sortBy, bool descending)
+    {
+        return sortBy switch
+        {
+            "name" => descending ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name),
+            "createdat" => descending ? query.OrderByDescending(c => c.CreatedAt) : query.OrderBy(c => c.CreatedAt),
+            _ => descending ? query.OrderByDescending(c => c.CategoryId) : query.OrderBy(c => c.CategoryId)
+        };
     }
 
     public async Task<ApiResponseDto<Category>> AddAsync(

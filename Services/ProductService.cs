@@ -52,11 +52,18 @@ namespace ECommerceApp.RyanW84.Services
             }
         }
 
-        public async Task<PaginatedResponseDto<List<Product>>> GetProductsAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+        public async Task<PaginatedResponseDto<List<Product>>> GetProductsAsync(ProductQueryParameters parameters, CancellationToken cancellationToken = default)
         {
             try
             {
-                var result = await _productRepository.GetAllProductsAsync(page, pageSize, cancellationToken);
+                parameters ??= new ProductQueryParameters();
+
+                if (parameters.MinPrice.HasValue && parameters.MaxPrice.HasValue && parameters.MinPrice > parameters.MaxPrice)
+                {
+                    (parameters.MinPrice, parameters.MaxPrice) = (parameters.MaxPrice, parameters.MinPrice);
+                }
+
+                var result = await _productRepository.GetAllProductsAsync(parameters, cancellationToken);
                 if (result.RequestFailed)
                 {
                     return new PaginatedResponseDto<List<Product>>
@@ -64,8 +71,8 @@ namespace ECommerceApp.RyanW84.Services
                         RequestFailed = true,
                         ResponseCode = result.ResponseCode,
                         ErrorMessage = result.ErrorMessage,
-                        CurrentPage = page,
-                        PageSize = pageSize,
+                        CurrentPage = parameters.Page,
+                        PageSize = parameters.PageSize,
                         TotalCount = 0
                     };
                 }
@@ -87,8 +94,8 @@ namespace ECommerceApp.RyanW84.Services
                     RequestFailed = true,
                     ResponseCode = HttpStatusCode.InternalServerError,
                     ErrorMessage = $"Failed to retrieve products: {ex.Message}",
-                    CurrentPage = page,
-                    PageSize = pageSize,
+                    CurrentPage = parameters?.Page ?? 1,
+                    PageSize = parameters?.PageSize ?? 10,
                     TotalCount = 0
                 };
             }

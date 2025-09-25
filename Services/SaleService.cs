@@ -142,11 +142,18 @@ public class SaleService(ECommerceDbContext db, ISaleRepository saleRepository) 
         };
     }
 
-    public async Task<PaginatedResponseDto<List<Sale>>> GetSalesAsync(int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponseDto<List<Sale>>> GetSalesAsync(SaleQueryParameters parameters, CancellationToken cancellationToken = default)
     {
         try
         {
-            var result = await _saleRepository.GetAllSalesAsync(page, pageSize, cancellationToken);
+            parameters ??= new SaleQueryParameters();
+
+            if (parameters.StartDate.HasValue && parameters.EndDate.HasValue && parameters.StartDate > parameters.EndDate)
+            {
+                (parameters.StartDate, parameters.EndDate) = (parameters.EndDate, parameters.StartDate);
+            }
+
+            var result = await _saleRepository.GetAllSalesAsync(parameters, cancellationToken);
             if (result.RequestFailed)
             {
                 return new PaginatedResponseDto<List<Sale>>
@@ -154,8 +161,8 @@ public class SaleService(ECommerceDbContext db, ISaleRepository saleRepository) 
                     RequestFailed = true,
                     ResponseCode = result.ResponseCode,
                     ErrorMessage = result.ErrorMessage,
-                    CurrentPage = page,
-                    PageSize = pageSize,
+                    CurrentPage = parameters.Page,
+                    PageSize = parameters.PageSize,
                     TotalCount = 0
                 };
             }
@@ -177,8 +184,8 @@ public class SaleService(ECommerceDbContext db, ISaleRepository saleRepository) 
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
                 ErrorMessage = $"Failed to retrieve sales: {ex.Message}",
-                CurrentPage = page,
-                PageSize = pageSize,
+                CurrentPage = parameters?.Page ?? 1,
+                PageSize = parameters?.PageSize ?? 10,
                 TotalCount = 0
             };
         }
