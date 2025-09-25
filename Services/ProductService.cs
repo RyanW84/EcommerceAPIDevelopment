@@ -190,6 +190,9 @@ namespace ECommerceApp.RyanW84.Services
                 var productToUpdate = request.Payload;
                 productToUpdate.ProductId = id; // Ensure ProductId is set
 
+                // Preserve the existing price to prevent price updates
+                productToUpdate.Price = existingResult.Data!.Price;
+
                 var result = await _productRepository.UpdateAsync(productToUpdate, cancellationToken);
                 if (result.RequestFailed)
                 {

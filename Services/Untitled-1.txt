@@ -1,0 +1,5 @@
+// Current: Specific interfaces don't inherit from base
+public interface ICategoryRepository { /* specific methods */ }
+
+// Could be improved to:
+public interface ICategoryRepository : IRepository<Category> { /* additional methods */ }

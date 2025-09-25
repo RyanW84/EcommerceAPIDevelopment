@@ -1,5 +1,6 @@
 using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Interfaces;
+using ECommerceApp.RyanW84.Middleware;
 using ECommerceApp.RyanW84.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -90,6 +91,9 @@ public class Program
                 throw;
             }
         }
+
+        // Add global exception handling
+        app.UseGlobalExceptionHandler();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
