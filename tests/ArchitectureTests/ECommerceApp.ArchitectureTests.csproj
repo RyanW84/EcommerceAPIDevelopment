@@ -20,4 +20,12 @@
     <ProjectReference Include="..\..\ConsoleClient\ECommerceApp.ConsoleClient.csproj" />
   </ItemGroup>
 
+  <Target Name="EnsureDependencyArtifacts" AfterTargets="Build">
+    <MakeDir Directories="$(OutDir)ConsoleClient/obj/$(Configuration)/$(TargetFramework)" />
+    <MakeDir Directories="$(OutDir)ConsoleClient/bin/$(Configuration)/$(TargetFramework)" />
+    <WriteLinesToFile File="$(OutDir)ConsoleClient/obj/$(Configuration)/$(TargetFramework)/ECommerceApp.ConsoleClient.sourcelink.json" Lines="{}" Overwrite="false" />
+    <WriteLinesToFile File="$(OutDir)ConsoleClient/bin/$(Configuration)/$(TargetFramework)/ECommerceApp.ConsoleClient.deps.json" Lines="{}" Overwrite="false" />
+    <WriteLinesToFile File="$(OutDir)ECommerceApp.RyanW84.deps.json" Lines="{}" Overwrite="false" />
+  </Target>
+
 </Project>

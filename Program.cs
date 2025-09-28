@@ -7,6 +7,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
+using Microsoft.AspNetCore.HttpOverrides;
 using Scalar.AspNetCore;
 using System.Runtime.InteropServices;
 
@@ -42,6 +43,13 @@ public class Program
         builder.Services.AddValidatorsFromAssemblyContaining<ProductValidator>();
 
         builder.Services.AddResponseCaching();
+
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.KnownIPNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
 
         // Add Scalar for API documentation
         builder.Services.AddOpenApi();
@@ -165,12 +173,14 @@ public class Program
             app.UseHsts();
         }
 
-        app.UseHttpsRedirection();
+    app.UseForwardedHeaders();
+
+    app.UseHttpsRedirection();
 
         // Required to match endpoints to controller routes
         app.UseRouting();
 
-    app.UseResponseCaching();
+        app.UseResponseCaching();
 
         // If you use authorization/Authentication, keep this. Safe to call even if you don't currently use them.
         app.UseAuthorization();
