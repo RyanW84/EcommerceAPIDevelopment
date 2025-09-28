@@ -8,6 +8,13 @@ namespace ECommerceApp.ArchitectureTests;
 
 public class ClientServerSeparationTests
 {
+    private static readonly string[] SessionDependencies =
+    {
+        "Microsoft.AspNetCore.Session",
+        "Microsoft.AspNetCore.Http.ISession",
+        "Microsoft.AspNetCore.Http.IHttpContextAccessor"
+    };
+
     [Fact]
     public void ApiAssemblyShouldNotDependOnConsoleClient()
     {
@@ -50,6 +57,18 @@ public class ClientServerSeparationTests
             .ResideInNamespace("ECommerceApp.RyanW84.Controllers")
             .Should()
             .NotHaveDependencyOn("Spectre.Console")
+            .GetResult();
+
+        Assert.True(result.IsSuccessful, FormatFailure(result));
+    }
+
+    [Fact]
+    public void ApiAssemblyShouldRemainStateless()
+    {
+        var result = Types
+            .InAssembly(typeof(Program).Assembly)
+            .Should()
+            .NotHaveDependencyOnAny(SessionDependencies)
             .GetResult();
 
         Assert.True(result.IsSuccessful, FormatFailure(result));
