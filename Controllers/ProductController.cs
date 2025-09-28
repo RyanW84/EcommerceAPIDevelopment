@@ -15,6 +15,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // GET /api/products
     [HttpGet]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
     public async Task<IActionResult> GetProductsAsync([FromQuery] ProductQueryParameters queryParameters, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -26,6 +27,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // GET /api/products/{id}
     [HttpGet("{id:int}")]
+    [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetProductById(int id, CancellationToken cancellationToken = default)
     {
         var result = await _productService.GetProductByIdAsync(id, cancellationToken);
@@ -36,6 +38,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // GET /api/products/category/{categoryId}
     [HttpGet("category/{categoryId:int}")]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "categoryId" })]
     public async Task<IActionResult> GetProductsByCategory(int categoryId, CancellationToken cancellationToken = default)
     {
         var result = await _productService.GetProductsByCategoryIdAsync(categoryId, cancellationToken);
@@ -45,6 +48,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // POST /api/products
     [HttpPost]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> CreateProduct([FromBody] ApiRequestDto<Product> request, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -57,6 +61,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // PUT /api/products/{id}
     [HttpPut("{id:int}")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> UpdateProduct(int id, [FromBody] ApiRequestDto<Product> request, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -68,6 +73,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // DELETE /api/products/{id}
     [HttpDelete("{id:int}")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken = default)
     {
         var result = await _productService.DeleteProductAsync(id, cancellationToken);
@@ -77,6 +83,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // GET /api/products/deleted
     [HttpGet("deleted")]
+    [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetDeletedProducts(CancellationToken cancellationToken = default)
     {
         var result = await _productService.GetDeletedProductsAsync(cancellationToken);
@@ -86,6 +93,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // POST /api/products/{id}/restore
     [HttpPost("{id:int}/restore")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> RestoreProduct(int id, CancellationToken cancellationToken = default)
     {
         var result = await _productService.RestoreProductAsync(id, cancellationToken);

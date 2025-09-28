@@ -31,4 +31,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
   </ItemGroup>
 
+  <Target Name="EnsureSourceLinkStub" AfterTargets="CoreCompile">
+    <WriteLinesToFile
+      File="$(IntermediateOutputPath)$(AssemblyName).sourcelink.json"
+      Lines="{}"
+      Overwrite="false" />
+  </Target>
+
 </Project>

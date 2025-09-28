@@ -17,6 +17,7 @@ public class SalesController : ControllerBase
 
     // POST /api/sales
     [HttpPost]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> Create([FromBody] ApiRequestDto<Sale> request, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -28,6 +29,7 @@ public class SalesController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var result = await _saleService.GetSaleByIdAsync(id, cancellationToken);
@@ -36,6 +38,7 @@ public class SalesController : ControllerBase
     }
 
     [HttpGet]
+    [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
     public async Task<IActionResult> GetAll([FromQuery] SaleQueryParameters queryParameters, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -46,6 +49,7 @@ public class SalesController : ControllerBase
     }
 
     [HttpGet("with-deleted-products")]
+    [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetAllWithDeletedProducts(CancellationToken cancellationToken)
     {
         var result = await _saleService.GetHistoricalSalesAsync(cancellationToken);
@@ -54,6 +58,7 @@ public class SalesController : ControllerBase
     }
 
     [HttpGet("{id:int}/with-deleted-products")]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByIdWithDeletedProducts(int id, CancellationToken cancellationToken)
     {
         var result = await _saleService.GetSaleByIdWithHistoricalProductsAsync(id, cancellationToken);

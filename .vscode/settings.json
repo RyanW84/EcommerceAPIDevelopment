@@ -107,6 +107,7 @@
         "projitems",
         "saledate",
         "Swashbuckle",
-        "totalamount"
+        "totalamount",
+        "xunit"
     ]
 }

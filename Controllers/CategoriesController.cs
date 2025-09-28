@@ -17,6 +17,7 @@ public class CategoriesController : ControllerBase
 
     // POST /api/categories
     [HttpPost]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> Create([FromBody] ApiRequestDto<Category> request, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -29,6 +30,7 @@ public class CategoriesController : ControllerBase
 
     // GET /api/categories
     [HttpGet]
+    [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
     public async Task<IActionResult> GetAll([FromQuery] CategoryQueryParameters queryParameters, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -40,6 +42,7 @@ public class CategoriesController : ControllerBase
 
     // GET /api/categories/{id}
     [HttpGet("{id:int}")]
+    [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var result = await _categoryService.GetCategoryAsync(id, cancellationToken);
@@ -49,6 +52,7 @@ public class CategoriesController : ControllerBase
 
     // GET /api/categories/name/{name}
     [HttpGet("name/{name}")]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "name" })]
     public async Task<IActionResult> GetByName(string name, CancellationToken cancellationToken)
     {
         var result = await _categoryService.GetCategoryByNameAsync(name, cancellationToken);
@@ -58,6 +62,7 @@ public class CategoriesController : ControllerBase
 
     // PUT /api/categories/{id}
     [HttpPut("{id:int}")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> Update(int id, [FromBody] ApiRequestDto<Category> request, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -69,6 +74,7 @@ public class CategoriesController : ControllerBase
 
     // DELETE /api/categories/{id}
     [HttpDelete("{id:int}")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var result = await _categoryService.DeleteCategoryAsync(id, cancellationToken);
@@ -78,6 +84,7 @@ public class CategoriesController : ControllerBase
 
     // GET /api/categories/deleted
     [HttpGet("deleted")]
+    [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetDeletedCategories(CancellationToken cancellationToken)
     {
         var result = await _categoryService.GetDeletedCategoriesAsync(cancellationToken);
@@ -87,6 +94,7 @@ public class CategoriesController : ControllerBase
 
     // POST /api/categories/{id}/restore
     [HttpPost("{id:int}/restore")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> Restore(int id, CancellationToken cancellationToken)
     {
         var result = await _categoryService.RestoreCategoryAsync(id, cancellationToken);

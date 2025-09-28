@@ -27,4 +27,11 @@
     </None>
   </ItemGroup>
 
+  <Target Name="EnsureSourceLinkStub" AfterTargets="CoreCompile">
+    <WriteLinesToFile
+      File="$(IntermediateOutputPath)$(AssemblyName).sourcelink.json"
+      Lines="{}"
+      Overwrite="false" />
+  </Target>
+
 </Project>

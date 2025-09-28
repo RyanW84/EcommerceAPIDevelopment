@@ -41,6 +41,8 @@ public class Program
 
         builder.Services.AddValidatorsFromAssemblyContaining<ProductValidator>();
 
+        builder.Services.AddResponseCaching();
+
         // Add Scalar for API documentation
         builder.Services.AddOpenApi();
 
@@ -167,6 +169,8 @@ public class Program
 
         // Required to match endpoints to controller routes
         app.UseRouting();
+
+    app.UseResponseCaching();
 
         // If you use authorization/Authentication, keep this. Safe to call even if you don't currently use them.
         app.UseAuthorization();
