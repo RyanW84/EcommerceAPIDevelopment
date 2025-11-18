@@ -20,6 +20,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Load user secrets
+        builder.Configuration.AddUserSecrets<Program>();
+
         // Add services to the container.
         builder
             .Services.AddControllers()
@@ -77,7 +80,7 @@ public class Program
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                options.UseSqlite(connectionString);
+                options.UseSqlServer(connectionString);
             }
             else
             {
@@ -173,9 +176,9 @@ public class Program
             app.UseHsts();
         }
 
-    app.UseForwardedHeaders();
+        app.UseForwardedHeaders();
 
-    app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
         // Required to match endpoints to controller routes
         app.UseRouting();

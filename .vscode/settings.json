@@ -1,17 +1,14 @@
 {
     // Solution and project settings
     "dotnet.defaultSolution": "ECommerceApp.RyanW84.sln",
-
     // .NET 10.0 specific settings - use modern language server instead of OmniSharp
     "dotnet.server.useOmnisharp": false,
     "omnisharp.useModernNet": true,
     "dotnetAcquisitionExtension.allowInvalidPaths": true,
-
     // Enable advanced IntelliSense features for .NET 10.0
     "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
     "dotnet.codeLens.enableReferencesCodeLens": true,
     "dotnet.codeLens.enableTestsCodeLens": true,
-
     // Inlay hints for better code readability
     "dotnet.inlayHints.enableInlayHintsForParameters": true,
     "dotnet.inlayHints.enableInlayHintsForLiteralParameters": true,
@@ -22,17 +19,14 @@
     "dotnet.inlayHints.enableInlayHintsForImplicitVariableTypes": true,
     "dotnet.inlayHints.enableInlayHintsForLambdaParameterTypes": true,
     "dotnet.inlayHints.enableInlayHintsForImplicitObjectCreation": true,
-
     // Enhanced C# language features - Microsoft Standards
     "csharp.semanticHighlighting.enabled": true,
     "csharp.format.enable": true,
     "csharp.suppressHiddenDiagnostics": false,
     "csharp.showOmnisharpLogOnError": true,
-
     // Roslyn analyzers and editor config support
     "omnisharp.enableRoslynAnalyzers": true,
     "omnisharp.enableEditorConfigSupport": true,
-
     // File associations for .NET
     "files.associations": {
         "*.cs": "csharp",
@@ -41,7 +35,6 @@
         "*.cshtml": "html",
         "*.razor": "razor"
     },
-
     // Editor settings optimized for C# and .NET 10.0 - Microsoft Standards
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
@@ -54,27 +47,22 @@
         "source.sortImports": "explicit",
         "source.addMissingImports": "explicit"
     },
-
     // Microsoft C# formatting standards
     "dotnet.format.enable": true,
     "dotnet.completion.showNameCompletionSuggestions": true,
     "dotnet.backgroundAnalysis.analyzerDiagnosticsScope": "fullSolution",
     "dotnet.backgroundAnalysis.compilerDiagnosticsScope": "fullSolution",
-
     // IntelliSense optimization
     "editor.suggest.insertMode": "replace",
     "editor.acceptSuggestionOnCommitCharacter": true,
     "editor.acceptSuggestionOnEnter": "on",
-
     // Debug settings
     "debug.allowBreakpointsEverywhere": true,
     "debug.showInlineBreakpointCandidates": true,
-
     // Terminal settings for .NET commands
     "terminal.integrated.env.linux": {
         "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
     },
-
     // File explorer and search exclusions
     "files.exclude": {
         "**/bin": true,
@@ -99,10 +87,12 @@
         "createdon",
         "customername",
         "datetimeoffset",
+        "latestsqlcmd",
         "localdb",
         "mssqllocaldb",
         "nvarchar",
         "onprem",
+        "Passw",
         "previewlanguage",
         "projitems",
         "saledate",
