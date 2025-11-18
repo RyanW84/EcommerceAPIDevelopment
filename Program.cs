@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using ECommerceApp.RyanW84.Data;
 using ECommerceApp.RyanW84.Interfaces;
 using ECommerceApp.RyanW84.Middleware;
@@ -5,11 +6,10 @@ using ECommerceApp.RyanW84.Services;
 using ECommerceApp.RyanW84.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
-using Microsoft.AspNetCore.HttpOverrides;
 using Scalar.AspNetCore;
-using System.Runtime.InteropServices;
 
 namespace ECommerceApp.RyanW84;
 
@@ -39,8 +39,8 @@ public class Program
                 options.JsonSerializerOptions.WriteIndented = true;
             });
 
-        builder.Services
-            .AddFluentValidationAutoValidation()
+        builder
+            .Services.AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters();
 
         builder.Services.AddValidatorsFromAssemblyContaining<ProductValidator>();
@@ -49,8 +49,9 @@ public class Program
 
         builder.Services.Configure<ForwardedHeadersOptions>(options =>
         {
-            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            options.KnownIPNetworks.Clear();
+            options.ForwardedHeaders =
+                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.KnownNetworks.Clear();
             options.KnownProxies.Clear();
         });
 
@@ -61,11 +62,16 @@ public class Program
         string connectionString;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            connectionString = "Server=(localdb)\\mssqllocaldb;Database=ECommerceDb;Trusted_Connection=True;";
+            connectionString =
+                "Server=(localdb)\\mssqllocaldb;Database=ECommerceDb;Trusted_Connection=True;";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            connectionString =
+                builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException(
+                    "Connection string 'DefaultConnection' not found."
+                );
         }
         else
         {
@@ -155,7 +161,8 @@ public class Program
                 options.SearchHotKey = "k";
 
                 // Custom Styling
-                options.CustomCss = @"
+                options.CustomCss =
+                    @"
                     .scalar-api-reference {
                         --scalar-color-primary: #2563eb;
                         --scalar-color-secondary: #64748b;

@@ -87,6 +87,8 @@
         "createdon",
         "customername",
         "datetimeoffset",
+        "Ecommerce",
+        "Hsts",
         "latestsqlcmd",
         "localdb",
         "mssqllocaldb",
@@ -96,6 +98,7 @@
         "previewlanguage",
         "projitems",
         "saledate",
+        "sourcelink",
         "Swashbuckle",
         "totalamount",
         "xunit"

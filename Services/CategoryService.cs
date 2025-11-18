@@ -58,7 +58,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             RequestFailed = false,
             ResponseCode = HttpStatusCode.Created,
             ErrorMessage = string.Empty,
-            Data = addResult.Data
+            Data = addResult.Data,
         };
     }
 
@@ -84,36 +84,45 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             RequestFailed = false,
             ResponseCode = HttpStatusCode.OK,
             ErrorMessage = string.Empty,
-            Data = repoResult.Data
+            Data = repoResult.Data,
         };
     }
 
-    public async Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(
+    public async Task<PaginatedResponseDto<List<Category>>> GetAllCategoriesAsync(
         CategoryQueryParameters parameters,
         CancellationToken cancellationToken = default
     )
     {
         parameters ??= new CategoryQueryParameters();
 
-        var repoResult = await _categoryRepository.GetAllCategoriesAsync(parameters, cancellationToken);
+        var repoResult = await _categoryRepository.GetAllCategoriesAsync(
+            parameters,
+            cancellationToken
+        );
 
         if (repoResult.RequestFailed)
         {
-            return new ApiResponseDto<List<Category>>
+            return new PaginatedResponseDto<List<Category>>
             {
                 RequestFailed = true,
                 ResponseCode = repoResult.ResponseCode,
                 ErrorMessage = repoResult.ErrorMessage,
-                Data = []
+                Data = [],
+                CurrentPage = parameters.Page,
+                PageSize = parameters.PageSize,
+                TotalCount = 0,
             };
         }
 
-        return new ApiResponseDto<List<Category>>
+        return new PaginatedResponseDto<List<Category>>
         {
             RequestFailed = false,
             ResponseCode = HttpStatusCode.OK,
             ErrorMessage = string.Empty,
-            Data = repoResult.Data ?? []
+            Data = repoResult.Data ?? [],
+            CurrentPage = repoResult.CurrentPage,
+            PageSize = repoResult.PageSize,
+            TotalCount = repoResult.TotalCount,
         };
     }
 
@@ -150,16 +159,25 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
         {
             CategoryId = existing.CategoryId,
             Name = string.IsNullOrWhiteSpace(payload.Name) ? existing.Name : payload.Name.Trim(),
-            Description = payload.Description is null ? existing.Description : payload.Description.Trim(),
+            Description = payload.Description is null
+                ? existing.Description
+                : payload.Description.Trim(),
             Products = existing.Products,
-            Sales = existing.Sales
+            Sales = existing.Sales,
         };
 
         // If name changed, ensure uniqueness (allow same category)
         if (!string.Equals(updatedCategory.Name, existing.Name, StringComparison.OrdinalIgnoreCase))
         {
-            var byName = await _categoryRepository.GetByNameAsync(updatedCategory.Name, cancellationToken);
-            if (byName.RequestFailed == false && byName.Data is not null && byName.Data.CategoryId != existing.CategoryId)
+            var byName = await _categoryRepository.GetByNameAsync(
+                updatedCategory.Name,
+                cancellationToken
+            );
+            if (
+                byName.RequestFailed == false
+                && byName.Data is not null
+                && byName.Data.CategoryId != existing.CategoryId
+            )
             {
                 return new ApiResponseDto<Category>
                 {
@@ -170,7 +188,10 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             }
         }
 
-        var updateResult = await _categoryRepository.UpdateAsync(updatedCategory, cancellationToken);
+        var updateResult = await _categoryRepository.UpdateAsync(
+            updatedCategory,
+            cancellationToken
+        );
         if (updateResult.RequestFailed)
         {
             return updateResult;
@@ -181,7 +202,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             RequestFailed = false,
             ResponseCode = HttpStatusCode.OK,
             ErrorMessage = string.Empty,
-            Data = updateResult.Data
+            Data = updateResult.Data,
         };
     }
 
@@ -203,7 +224,10 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             };
         }
 
-        var delResult = await _categoryRepository.DeleteAsync(existing.CategoryId, cancellationToken);
+        var delResult = await _categoryRepository.DeleteAsync(
+            existing.CategoryId,
+            cancellationToken
+        );
         if (delResult.RequestFailed)
         {
             return new ApiResponseDto<bool>
@@ -211,7 +235,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
                 RequestFailed = true,
                 ResponseCode = delResult.ResponseCode,
                 ErrorMessage = delResult.ErrorMessage,
-                Data = false
+                Data = false,
             };
         }
 
@@ -259,7 +283,9 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
         };
     }
 
-    public async Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(CancellationToken cancellationToken = default)
+    public async Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
@@ -270,7 +296,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
                 {
                     RequestFailed = true,
                     ResponseCode = result.ResponseCode,
-                    ErrorMessage = result.ErrorMessage
+                    ErrorMessage = result.ErrorMessage,
                 };
             }
 
@@ -278,7 +304,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
-                Data = result.Data
+                Data = result.Data,
             };
         }
         catch (Exception ex)
@@ -287,12 +313,15 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
-                ErrorMessage = $"Failed to retrieve deleted categories: {ex.Message}"
+                ErrorMessage = $"Failed to retrieve deleted categories: {ex.Message}",
             };
         }
     }
 
-    public async Task<ApiResponseDto<bool>> RestoreCategoryAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ApiResponseDto<bool>> RestoreCategoryAsync(
+        int id,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
@@ -303,7 +332,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
                 {
                     RequestFailed = true,
                     ResponseCode = result.ResponseCode,
-                    ErrorMessage = result.ErrorMessage
+                    ErrorMessage = result.ErrorMessage,
                 };
             }
 
@@ -311,7 +340,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
-                Data = result.Data
+                Data = result.Data,
             };
         }
         catch (Exception ex)
@@ -320,7 +349,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
-                ErrorMessage = $"Failed to restore category: {ex.Message}"
+                ErrorMessage = $"Failed to restore category: {ex.Message}",
             };
         }
     }

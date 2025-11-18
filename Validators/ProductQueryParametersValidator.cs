@@ -11,26 +11,30 @@ public class ProductQueryParametersValidator : AbstractValidator<ProductQueryPar
         "name",
         "price",
         "stock",
-        "createdon"
+        "createdat",
+        "category",
     ];
 
     public ProductQueryParametersValidator()
     {
-        RuleFor(x => x.Page)
-            .GreaterThan(0).WithMessage("Page must be greater than zero.");
+        RuleFor(x => x.Page).GreaterThan(0).WithMessage("Page must be greater than zero.");
 
         RuleFor(x => x.PageSize)
-            .InclusiveBetween(1, 100).WithMessage("Page size must be between 1 and 100.");
+            .InclusiveBetween(1, 100)
+            .WithMessage("Page size must be between 1 and 100.");
 
         RuleFor(x => x.Search)
-            .MaximumLength(100).WithMessage("Search term must not exceed 100 characters.");
+            .MaximumLength(100)
+            .WithMessage("Search term must not exceed 100 characters.");
 
         RuleFor(x => x.MinPrice)
-            .GreaterThanOrEqualTo(0).When(x => x.MinPrice.HasValue)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.MinPrice.HasValue)
             .WithMessage("Minimum price must be zero or greater.");
 
         RuleFor(x => x.MaxPrice)
-            .GreaterThanOrEqualTo(0).When(x => x.MaxPrice.HasValue)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.MaxPrice.HasValue)
             .WithMessage("Maximum price must be zero or greater.");
 
         RuleFor(x => x)
@@ -45,11 +49,15 @@ public class ProductQueryParametersValidator : AbstractValidator<ProductQueryPar
         RuleFor(x => x.SortBy)
             .Must(sortBy => AllowedSortColumns.Contains(sortBy!.ToLowerInvariant()))
             .When(x => !string.IsNullOrWhiteSpace(x.SortBy))
-            .WithMessage($"Sort by must be one of the following values: {string.Join(", ", AllowedSortColumns)}.");
+            .WithMessage(
+                $"Sort by must be one of the following values: {string.Join(", ", AllowedSortColumns)}."
+            );
     }
 
     private static bool BeValidSortDirection(string? direction) =>
-        direction is not null &&
-        (direction.Equals("asc", StringComparison.OrdinalIgnoreCase) ||
-         direction.Equals("desc", StringComparison.OrdinalIgnoreCase));
+        direction is not null
+        && (
+            direction.Equals("asc", StringComparison.OrdinalIgnoreCase)
+            || direction.Equals("desc", StringComparison.OrdinalIgnoreCase)
+        );
 }

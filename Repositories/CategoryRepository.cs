@@ -90,19 +90,19 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
         }
     }
 
-    public async Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(
+    public async Task<PaginatedResponseDto<List<Category>>> GetAllCategoriesAsync(
         CategoryQueryParameters parameters,
         CancellationToken cancellationToken = default
     )
     {
+        parameters ??= new CategoryQueryParameters();
+
+        var page = Math.Max(parameters.Page, 1);
+        var pageSize = Math.Clamp(parameters.PageSize, 1, 32);
+
         try
         {
-            parameters ??= new CategoryQueryParameters();
-
-            var query = _db
-                .Categories.AsNoTracking()
-                .Include(c => c.Products)
-                .AsQueryable();
+            var query = _db.Categories.AsNoTracking().Include(c => c.Products).AsQueryable();
 
             if (parameters.IncludeDeleted)
             {
@@ -114,43 +114,68 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
             {
                 var likePattern = $"%{search}%";
                 query = query.Where(c =>
-                    EF.Functions.Like(c.Name, likePattern) ||
-                    EF.Functions.Like(c.Description, likePattern));
+                    EF.Functions.Like(c.Name, likePattern)
+                    || EF.Functions.Like(c.Description, likePattern)
+                );
             }
 
-            var descending = string.Equals(parameters.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+            var descending = string.Equals(
+                parameters.SortDirection,
+                "desc",
+                StringComparison.OrdinalIgnoreCase
+            );
             var sortBy = parameters.SortBy?.Trim().ToLowerInvariant();
             query = ApplyCategorySorting(query, sortBy, descending);
 
-            var list = await query.ToListAsync(cancellationToken);
+            var totalCount = await query.CountAsync(cancellationToken);
+            var categories = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
 
-            return new ApiResponseDto<List<Category>>
+            return new PaginatedResponseDto<List<Category>>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
                 ErrorMessage = string.Empty,
-                Data = list,
+                Data = categories,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
             };
         }
         catch (Exception ex)
         {
-            return new ApiResponseDto<List<Category>>
+            return new PaginatedResponseDto<List<Category>>
             {
                 RequestFailed = true,
                 ResponseCode = HttpStatusCode.InternalServerError,
                 ErrorMessage = ex.Message,
                 Data = [],
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalCount = 0,
             };
         }
     }
 
-    private static IQueryable<Category> ApplyCategorySorting(IQueryable<Category> query, string? sortBy, bool descending)
+    private static IQueryable<Category> ApplyCategorySorting(
+        IQueryable<Category> query,
+        string? sortBy,
+        bool descending
+    )
     {
         return sortBy switch
         {
-            "name" => descending ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name),
-            "createdat" => descending ? query.OrderByDescending(c => c.CreatedAt) : query.OrderBy(c => c.CreatedAt),
-            _ => descending ? query.OrderByDescending(c => c.CategoryId) : query.OrderBy(c => c.CategoryId)
+            "name" => descending
+                ? query.OrderByDescending(c => c.Name)
+                : query.OrderBy(c => c.Name),
+            "createdat" => descending
+                ? query.OrderByDescending(c => c.CreatedAt)
+                : query.OrderBy(c => c.CreatedAt),
+            _ => descending
+                ? query.OrderByDescending(c => c.CategoryId)
+                : query.OrderBy(c => c.CategoryId),
         };
     }
 
@@ -318,12 +343,15 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
         }
     }
 
-    public async Task<ApiResponseDto<bool>> RestoreAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ApiResponseDto<bool>> RestoreAsync(
+        int id,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            var category = await _db.Categories
-                .IgnoreQueryFilters() // Include soft-deleted items
+            var category = await _db
+                .Categories.IgnoreQueryFilters() // Include soft-deleted items
                 .FirstOrDefaultAsync(c => c.CategoryId == id, cancellationToken);
 
             if (category == null)
@@ -373,13 +401,14 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
         }
     }
 
-    public async Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(CancellationToken cancellationToken = default)
+    public async Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             var deletedCategories = await _db
-                .Categories
-                .IgnoreQueryFilters() // Include soft-deleted items
+                .Categories.IgnoreQueryFilters() // Include soft-deleted items
                 .Where(c => c.IsDeleted)
                 .Include(c => c.Products)
                 .Include(c => c.Sales)
@@ -406,12 +435,15 @@ public class CategoryRepository(ECommerceDbContext db) : ICategoryRepository
         }
     }
 
-    public async Task<ApiResponseDto<bool>> HardDeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ApiResponseDto<bool>> HardDeleteAsync(
+        int id,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            var category = await _db.Categories
-                .IgnoreQueryFilters() // Include soft-deleted items
+            var category = await _db
+                .Categories.IgnoreQueryFilters() // Include soft-deleted items
                 .FirstOrDefaultAsync(c => c.CategoryId == id, cancellationToken);
 
             if (category == null)

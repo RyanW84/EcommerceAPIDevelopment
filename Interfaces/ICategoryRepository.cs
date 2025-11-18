@@ -17,7 +17,10 @@ public interface ICategoryRepository
         string name,
         CancellationToken cancellationToken = default
     );
-    Task<ApiResponseDto<List<Category>>> GetAllCategoriesAsync(CategoryQueryParameters parameters, CancellationToken cancellationToken = default);
+    Task<PaginatedResponseDto<List<Category>>> GetAllCategoriesAsync(
+        CategoryQueryParameters parameters,
+        CancellationToken cancellationToken = default
+    );
     Task<ApiResponseDto<Category>> AddAsync(
         Category entity,
         CancellationToken cancellationToken = default
@@ -26,15 +29,13 @@ public interface ICategoryRepository
         Category entity,
         CancellationToken cancellationToken = default
     );
-    Task<ApiResponseDto<bool>> DeleteAsync(
-       int id,
+    Task<ApiResponseDto<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<bool>> RestoreAsync(int id, CancellationToken cancellationToken = default);
+    Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(
         CancellationToken cancellationToken = default
     );
-    Task<ApiResponseDto<bool>> RestoreAsync(int id,
-        CancellationToken cancellationToken = default
-    );
-    Task<ApiResponseDto<List<Category>>> GetDeletedCategoriesAsync(CancellationToken cancellationToken = default);
-    Task<ApiResponseDto<bool>> HardDeleteAsync(int id,
+    Task<ApiResponseDto<bool>> HardDeleteAsync(
+        int id,
         CancellationToken cancellationToken = default
     );
 }
