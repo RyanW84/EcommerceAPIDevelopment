@@ -18,12 +18,17 @@ public class SalesController : ControllerBase
     // POST /api/sales
     [HttpPost]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-    public async Task<IActionResult> Create([FromBody] ApiRequestDto<Sale> request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(
+        [FromBody] ApiRequestDto<Sale> request,
+        CancellationToken cancellationToken
+    )
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         var result = await _saleService.CreateSaleAsync(request, cancellationToken);
-        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
+        if (result.RequestFailed)
+            return this.FromFailure(result.ResponseCode, result.ErrorMessage);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Data!.SaleId }, result.Data);
     }
@@ -33,18 +38,28 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var result = await _saleService.GetSaleByIdAsync(id, cancellationToken);
-        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        if (result.RequestFailed)
+            return this.FromFailure(result.ResponseCode, result.ErrorMessage);
+        return Ok(result);
     }
 
     [HttpGet]
-    [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
-    public async Task<IActionResult> GetAll([FromQuery] SaleQueryParameters queryParameters, CancellationToken cancellationToken = default)
+    [ResponseCache(
+        Duration = 30,
+        Location = ResponseCacheLocation.Any,
+        VaryByQueryKeys = new[] { "*" }
+    )]
+    public async Task<IActionResult> GetAll(
+        [FromQuery] SaleQueryParameters queryParameters,
+        CancellationToken cancellationToken = default
+    )
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         var result = await _saleService.GetSalesAsync(queryParameters, cancellationToken);
-        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
+        if (result.RequestFailed)
+            return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result);
     }
 
@@ -53,16 +68,24 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> GetAllWithDeletedProducts(CancellationToken cancellationToken)
     {
         var result = await _saleService.GetHistoricalSalesAsync(cancellationToken);
-        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
+        if (result.RequestFailed)
+            return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 
     [HttpGet("{id:int}/with-deleted-products")]
     [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
-    public async Task<IActionResult> GetByIdWithDeletedProducts(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByIdWithDeletedProducts(
+        int id,
+        CancellationToken cancellationToken
+    )
     {
-        var result = await _saleService.GetSaleByIdWithHistoricalProductsAsync(id, cancellationToken);
-        if (result.RequestFailed) return this.FromFailure(result.ResponseCode, result.ErrorMessage);
+        var result = await _saleService.GetSaleByIdWithHistoricalProductsAsync(
+            id,
+            cancellationToken
+        );
+        if (result.RequestFailed)
+            return this.FromFailure(result.ResponseCode, result.ErrorMessage);
         return Ok(result.Data);
     }
 }

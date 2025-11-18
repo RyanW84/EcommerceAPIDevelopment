@@ -12,7 +12,10 @@ namespace ECommerceApp.RyanW84.Repositories
     {
         private readonly ECommerceDbContext _db = db;
 
-        public async Task<ApiResponseDto<Product>> AddAsync(Product entity, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseDto<Product>> AddAsync(
+            Product entity,
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
@@ -29,14 +32,17 @@ namespace ECommerceApp.RyanW84.Repositories
             catch (DbUpdateException ex)
             {
                 // Handle constraint violations, foreign key errors, etc.
-                if (ex.InnerException?.Message.Contains("FOREIGN KEY") == true ||
-                    ex.InnerException?.Message.Contains("constraint") == true)
+                if (
+                    ex.InnerException?.Message.Contains("FOREIGN KEY") == true
+                    || ex.InnerException?.Message.Contains("constraint") == true
+                )
                 {
                     return new ApiResponseDto<Product>
                     {
                         RequestFailed = true,
                         ResponseCode = HttpStatusCode.BadRequest,
-                        ErrorMessage = "Invalid data: Foreign key constraint violation or invalid reference.",
+                        ErrorMessage =
+                            "Invalid data: Foreign key constraint violation or invalid reference.",
                         Data = null,
                     };
                 }
@@ -92,7 +98,10 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<PaginatedResponseDto<List<Product>>> GetAllProductsAsync(ProductQueryParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<PaginatedResponseDto<List<Product>>> GetAllProductsAsync(
+            ProductQueryParameters parameters,
+            CancellationToken cancellationToken = default
+        )
         {
             parameters ??= new ProductQueryParameters();
 
@@ -101,18 +110,16 @@ namespace ECommerceApp.RyanW84.Repositories
 
             try
             {
-                var query = _db
-                    .Products.AsNoTracking()
-                    .Include(p => p.Category)
-                    .AsQueryable();
+                var query = _db.Products.AsNoTracking().Include(p => p.Category).AsQueryable();
 
                 var search = parameters.Search?.Trim();
                 if (!string.IsNullOrEmpty(search))
                 {
                     var likePattern = $"%{search}%";
                     query = query.Where(p =>
-                        EF.Functions.Like(p.Name, likePattern) ||
-                        EF.Functions.Like(p.Description, likePattern));
+                        EF.Functions.Like(p.Name, likePattern)
+                        || EF.Functions.Like(p.Description, likePattern)
+                    );
                 }
 
                 if (parameters.MinPrice is { } minPrice)
@@ -130,7 +137,11 @@ namespace ECommerceApp.RyanW84.Repositories
                     query = query.Where(p => p.CategoryId == categoryId);
                 }
 
-                var descending = string.Equals(parameters.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                var descending = string.Equals(
+                    parameters.SortDirection,
+                    "desc",
+                    StringComparison.OrdinalIgnoreCase
+                );
                 var sortBy = parameters.SortBy?.Trim().ToLowerInvariant();
 
                 var orderedQuery = ApplyProductSorting(query, sortBy, descending);
@@ -149,7 +160,7 @@ namespace ECommerceApp.RyanW84.Repositories
                     Data = products,
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalCount = totalCount
+                    TotalCount = totalCount,
                 };
             }
             catch (Exception ex)
@@ -162,25 +173,44 @@ namespace ECommerceApp.RyanW84.Repositories
                     Data = null,
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalCount = 0
+                    TotalCount = 0,
                 };
             }
         }
 
-        private static IQueryable<Product> ApplyProductSorting(IQueryable<Product> query, string? sortBy, bool descending)
+        private static IQueryable<Product> ApplyProductSorting(
+            IQueryable<Product> query,
+            string? sortBy,
+            bool descending
+        )
         {
             return sortBy switch
             {
-                "name" => descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
-                "price" => descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
-                "createdat" => descending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
-                "stock" => descending ? query.OrderByDescending(p => p.Stock) : query.OrderBy(p => p.Stock),
-                "category" => descending ? query.OrderByDescending(p => p.Category.Name) : query.OrderBy(p => p.Category.Name),
-                _ => descending ? query.OrderByDescending(p => p.ProductId) : query.OrderBy(p => p.ProductId)
+                "name" => descending
+                    ? query.OrderByDescending(p => p.Name)
+                    : query.OrderBy(p => p.Name),
+                "price" => descending
+                    ? query.OrderByDescending(p => p.Price)
+                    : query.OrderBy(p => p.Price),
+                "createdat" => descending
+                    ? query.OrderByDescending(p => p.CreatedAt)
+                    : query.OrderBy(p => p.CreatedAt),
+                "stock" => descending
+                    ? query.OrderByDescending(p => p.Stock)
+                    : query.OrderBy(p => p.Stock),
+                "category" => descending
+                    ? query.OrderByDescending(p => p.Category.Name)
+                    : query.OrderBy(p => p.Category.Name),
+                _ => descending
+                    ? query.OrderByDescending(p => p.ProductId)
+                    : query.OrderBy(p => p.ProductId),
             };
         }
 
-        public async Task<ApiResponseDto<List<Product>>> GetProductsByCategoryIdAsync(int categoryId, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseDto<List<Product>>> GetProductsByCategoryIdAsync(
+            int categoryId,
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
@@ -209,18 +239,43 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<ApiResponseDto<Product>> UpdateAsync(Product entity, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseDto<Product>> UpdateAsync(
+            Product entity,
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
-                _db.Products.Update(entity);
+                var existing = await _db
+                    .Products.Include(p => p.Category)
+                    .FirstOrDefaultAsync(p => p.ProductId == entity.ProductId, cancellationToken);
+
+                if (existing == null)
+                {
+                    return new ApiResponseDto<Product>
+                    {
+                        RequestFailed = true,
+                        ResponseCode = HttpStatusCode.NotFound,
+                        ErrorMessage = "Product not found",
+                        Data = null,
+                    };
+                }
+
+                // Update properties
+                existing.Name = entity.Name;
+                existing.Description = entity.Description;
+                existing.Stock = entity.Stock;
+                existing.IsActive = entity.IsActive;
+                existing.CategoryId = entity.CategoryId;
+                // Note: Price is preserved in the service layer
+
                 await _db.SaveChangesAsync(cancellationToken);
                 return new ApiResponseDto<Product>
                 {
                     RequestFailed = false,
                     ResponseCode = HttpStatusCode.OK,
                     ErrorMessage = string.Empty,
-                    Data = entity,
+                    Data = existing,
                 };
             }
             catch (DbUpdateConcurrencyException)
@@ -229,20 +284,24 @@ namespace ECommerceApp.RyanW84.Repositories
                 {
                     RequestFailed = true,
                     ResponseCode = HttpStatusCode.Conflict,
-                    ErrorMessage = "Product was modified by another user. Please refresh and try again.",
+                    ErrorMessage =
+                        "Product was modified by another user. Please refresh and try again.",
                     Data = null,
                 };
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException?.Message.Contains("FOREIGN KEY") == true ||
-                    ex.InnerException?.Message.Contains("constraint") == true)
+                if (
+                    ex.InnerException?.Message.Contains("FOREIGN KEY") == true
+                    || ex.InnerException?.Message.Contains("constraint") == true
+                )
                 {
                     return new ApiResponseDto<Product>
                     {
                         RequestFailed = true,
                         ResponseCode = HttpStatusCode.BadRequest,
-                        ErrorMessage = "Invalid data: Foreign key constraint violation or invalid reference.",
+                        ErrorMessage =
+                            "Invalid data: Foreign key constraint violation or invalid reference.",
                         Data = null,
                     };
                 }
@@ -267,7 +326,10 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<ApiResponseDto<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseDto<bool>> DeleteAsync(
+            int id,
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
@@ -299,14 +361,17 @@ namespace ECommerceApp.RyanW84.Repositories
             catch (DbUpdateException ex)
             {
                 // Handle cases where deletion fails due to foreign key constraints
-                if (ex.InnerException?.Message.Contains("FOREIGN KEY") == true ||
-                    ex.InnerException?.Message.Contains("constraint") == true)
+                if (
+                    ex.InnerException?.Message.Contains("FOREIGN KEY") == true
+                    || ex.InnerException?.Message.Contains("constraint") == true
+                )
                 {
                     return new ApiResponseDto<bool>
                     {
                         RequestFailed = true,
                         ResponseCode = HttpStatusCode.Conflict,
-                        ErrorMessage = "Cannot delete product as it is referenced by existing sales.",
+                        ErrorMessage =
+                            "Cannot delete product as it is referenced by existing sales.",
                         Data = false,
                     };
                 }
@@ -331,12 +396,15 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<ApiResponseDto<bool>> RestoreAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseDto<bool>> RestoreAsync(
+            int id,
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
-                var product = await _db.Products
-                    .IgnoreQueryFilters() // Include soft-deleted items
+                var product = await _db
+                    .Products.IgnoreQueryFilters() // Include soft-deleted items
                     .FirstOrDefaultAsync(p => p.ProductId == id, cancellationToken);
 
                 if (product == null)
@@ -386,13 +454,14 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<ApiResponseDto<List<Product>>> GetDeletedProductsAsync(CancellationToken cancellationToken = default)
+        public async Task<ApiResponseDto<List<Product>>> GetDeletedProductsAsync(
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
                 var deletedProducts = await _db
-                    .Products
-                    .IgnoreQueryFilters() // Include soft-deleted items
+                    .Products.IgnoreQueryFilters() // Include soft-deleted items
                     .Where(p => p.IsDeleted)
                     .Include(p => p.Category)
                     .AsNoTracking()
@@ -418,12 +487,15 @@ namespace ECommerceApp.RyanW84.Repositories
             }
         }
 
-        public async Task<ApiResponseDto<bool>> HardDeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ApiResponseDto<bool>> HardDeleteAsync(
+            int id,
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
-                var product = await _db.Products
-                    .IgnoreQueryFilters() // Include soft-deleted items
+                var product = await _db
+                    .Products.IgnoreQueryFilters() // Include soft-deleted items
                     .FirstOrDefaultAsync(p => p.ProductId == id, cancellationToken);
 
                 if (product == null)

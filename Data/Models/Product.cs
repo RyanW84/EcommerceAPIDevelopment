@@ -12,7 +12,7 @@ public class Product : BaseEntity
 
     public required bool IsActive { get; set; }
     public int CategoryId { get; set; }
-    public Category Category { get; set; } = null!;
+    public Category? Category { get; set; }
 
     // now hold sale items (join)
     public ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();

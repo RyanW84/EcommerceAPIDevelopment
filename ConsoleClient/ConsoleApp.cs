@@ -44,10 +44,18 @@ public class ConsoleApp
         var keepRunning = true;
         while (keepRunning)
         {
-            var choice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("[cyan]Select an area to explore[/]")
-                .HighlightStyle(Style.Parse("green bold"))
-                .AddChoices(Menu.Products, Menu.Categories, Menu.Sales, Menu.Settings, Menu.Exit));
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[cyan]Select an area to explore[/]")
+                    .HighlightStyle(Style.Parse("green bold"))
+                    .AddChoices(
+                        Menu.Products,
+                        Menu.Categories,
+                        Menu.Sales,
+                        Menu.Settings,
+                        Menu.Exit
+                    )
+            );
 
             switch (choice)
             {
@@ -77,15 +85,17 @@ public class ConsoleApp
         AnsiConsole.Clear();
         AnsiConsole.Write(new FigletText("E-Commerce").Color(Color.Aqua));
 
-        var panel = new Panel(@"Interact with the ECommerce API.
+        var panel = new Panel(
+            @"Interact with the ECommerce API.
 - Browse products with rich filtering
 - Manage categories and inventory
-- Inspect sales and drill into order detail")
+- Inspect sales and drill into order detail"
+        )
         {
             Header = new PanelHeader("Welcome", Justify.Center),
             Border = BoxBorder.Rounded,
             Expand = true,
-            Padding = new Padding(1)
+            Padding = new Padding(1),
         };
 
         panel.BorderStyle = new Style(Color.LightGreen);
@@ -96,7 +106,9 @@ public class ConsoleApp
 
     private void ShowSettings()
     {
-        var table = new Table().Border(TableBorder.Rounded).Title("[yellow]Current API Settings[/]");
+        var table = new Table()
+            .Border(TableBorder.Rounded)
+            .Title("[yellow]Current API Settings[/]");
         table.AddColumn("Setting");
         table.AddColumn("Value");
         table.AddRow("Base Address", _options.BaseAddress);
@@ -113,9 +125,18 @@ public class ConsoleApp
         var keepGoing = true;
         while (keepGoing)
         {
-            var choice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("[green]Products[/]")
-                .AddChoices(Menu.Browse, Menu.ViewDetails, Menu.Create, Menu.Update, Menu.Delete, Menu.Back));
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[green]Products[/]")
+                    .AddChoices(
+                        Menu.Browse,
+                        Menu.ViewDetails,
+                        Menu.Create,
+                        Menu.Update,
+                        Menu.Delete,
+                        Menu.Back
+                    )
+            );
 
             switch (choice)
             {
@@ -147,9 +168,13 @@ public class ConsoleApp
 
         while (true)
         {
-            var result = await AnsiConsole.Status()
+            var result = await AnsiConsole
+                .Status()
                 .Spinner(Spinner.Known.Dots)
-                .StartAsync("Loading products...", async _ => await _apiClient.GetProductsAsync(query, cancellationToken));
+                .StartAsync(
+                    "Loading products...",
+                    async _ => await _apiClient.GetProductsAsync(query, cancellationToken)
+                );
 
             if (!result.Success)
             {
@@ -166,7 +191,11 @@ public class ConsoleApp
             RenderProductTable(result.Data.Data, result.Data);
 
             // Show pagination menu
-            var newQuery = await ShowProductPaginationMenuAsync(result.Data, query, (q) => Task.CompletedTask);
+            var newQuery = await ShowProductPaginationMenuAsync(
+                result.Data,
+                query,
+                (q) => Task.CompletedTask
+            );
             if (newQuery == null)
             {
                 // User chose to go back
@@ -183,7 +212,7 @@ public class ConsoleApp
         var result = await _apiClient.GetProductByIdAsync(id, cancellationToken);
         if (!result.Success || result.Data is null)
         {
-            RenderError(result.Message.Length == 0 ? $"Product {id} not found." : result.Message);
+            RenderError(result.Message.Length == 0 ? "Product not found." : result.Message);
             return;
         }
 
@@ -205,7 +234,9 @@ public class ConsoleApp
             return;
         }
 
-        RenderSuccess($"Product '{result.Data?.Name}' created successfully with ID {result.Data?.ProductId}.");
+        RenderSuccess(
+            $"Product '{result.Data?.Name}' created successfully with ID {result.Data?.ProductId}."
+        );
     }
 
     private async Task UpdateProductAsync(CancellationToken cancellationToken)
@@ -267,13 +298,17 @@ public class ConsoleApp
         var maxPrice = PromptOptionalDecimal("Maximum price:");
         var pageSize = PromptOptionalInt("Page size (default 10):") ?? 10;
 
-        var sort = AnsiConsole.Prompt(new SelectionPrompt<string>()
-            .Title("Sort by")
-            .AddChoices("Default", "Name", "Price", "Stock", "CreatedOn"));
+        var sort = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Sort by")
+                .AddChoices("Default", "Name", "Price", "Stock", "CreatedOn")
+        );
 
-        var direction = AnsiConsole.Prompt(new SelectionPrompt<string>()
-            .Title("Sort direction")
-            .AddChoices(Menu.Ascending, Menu.Descending));
+        var direction = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Sort direction")
+                .AddChoices(Menu.Ascending, Menu.Descending)
+        );
 
         return new ProductQuery(
             Page: 1,
@@ -283,30 +318,46 @@ public class ConsoleApp
             MaxPrice: maxPrice,
             CategoryId: categoryId,
             SortBy: sort == "Default" ? null : sort.ToLowerInvariant(),
-            SortDirection: direction == Menu.Ascending ? "asc" : "desc");
+            SortDirection: direction == Menu.Ascending ? "asc" : "desc"
+        );
     }
 
-    private async Task<Product?> PromptForProductAsync(CancellationToken cancellationToken, Product? existing = null)
+    private async Task<Product?> PromptForProductAsync(
+        CancellationToken cancellationToken,
+        Product? existing = null
+    )
     {
         var namePrompt = new TextPrompt<string>("Product name:")
             .DefaultValue(existing?.Name ?? string.Empty)
-            .Validate(value => string.IsNullOrWhiteSpace(value)
-                ? ValidationResult.Error("Name is required.")
-                : ValidationResult.Success());
+            .Validate(value =>
+                string.IsNullOrWhiteSpace(value)
+                    ? ValidationResult.Error("Name is required.")
+                    : ValidationResult.Success()
+            );
 
         var descriptionPrompt = new TextPrompt<string>("Description:")
             .DefaultValue(existing?.Description ?? string.Empty)
-            .Validate(value => string.IsNullOrWhiteSpace(value)
-                ? ValidationResult.Error("Description is required.")
-                : ValidationResult.Success());
+            .Validate(value =>
+                string.IsNullOrWhiteSpace(value)
+                    ? ValidationResult.Error("Description is required.")
+                    : ValidationResult.Success()
+            );
 
         var pricePrompt = new TextPrompt<decimal>("Price:")
             .DefaultValue(existing?.Price ?? 0m)
-            .Validate(value => value > 0 ? ValidationResult.Success() : ValidationResult.Error("Price must be positive."));
+            .Validate(value =>
+                value > 0
+                    ? ValidationResult.Success()
+                    : ValidationResult.Error("Price must be positive.")
+            );
 
         var stockPrompt = new TextPrompt<int>("Stock quantity:")
             .DefaultValue(existing?.Stock ?? 0)
-            .Validate(value => value >= 0 ? ValidationResult.Success() : ValidationResult.Error("Stock cannot be negative."));
+            .Validate(value =>
+                value >= 0
+                    ? ValidationResult.Success()
+                    : ValidationResult.Error("Stock cannot be negative.")
+            );
 
         var categories = await LoadCategoriesAsync(cancellationToken);
         if (categories.Length == 0)
@@ -336,7 +387,7 @@ public class ConsoleApp
             Stock = stock,
             CategoryId = category.CategoryId,
             Category = category,
-            IsActive = isActive
+            IsActive = isActive,
         };
     }
 
@@ -352,7 +403,10 @@ public class ConsoleApp
         return result.Data.OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase).ToArray();
     }
 
-    private static void RenderProductTable(IReadOnlyCollection<Product> products, PaginatedResponse<List<Product>>? metadata)
+    private static void RenderProductTable(
+        IReadOnlyCollection<Product> products,
+        PaginatedResponse<List<Product>>? metadata
+    )
     {
         var table = new Table().Border(TableBorder.Rounded).Title("[aqua]Products[/]");
         table.AddColumn("ID");
@@ -370,12 +424,41 @@ public class ConsoleApp
                 Markup.Escape(product.Category?.Name ?? "-"),
                 product.Price.ToString("C"),
                 product.Stock.ToString(),
-                product.IsActive ? "[green]Yes[/]" : "[red]No[/]");
+                product.IsActive ? "[green]Yes[/]" : "[red]No[/]"
+            );
         }
 
         if (metadata is not null)
         {
-            table.Caption($"Page {metadata.CurrentPage} of {metadata.TotalPages} (Total {metadata.TotalCount})");
+            table.Caption(
+                $"Page {metadata.CurrentPage} of {metadata.TotalPages} (Total {metadata.TotalCount})"
+            );
+        }
+
+        AnsiConsole.Write(table);
+        AnsiConsole.WriteLine();
+    }
+
+    private static void RenderProductSelectionTable(IReadOnlyCollection<Product> products)
+    {
+        var table = new Table().Border(TableBorder.Rounded).Title("[aqua]Select a Product[/]");
+        table.AddColumn("#");
+        table.AddColumn("Name");
+        table.AddColumn("Category");
+        table.AddColumn("Price");
+        table.AddColumn("Stock");
+
+        var index = 1;
+        foreach (var product in products)
+        {
+            table.AddRow(
+                $"[yellow]{index}[/]",
+                Markup.Escape(product.Name),
+                Markup.Escape(product.Category?.Name ?? "-"),
+                product.Price.ToString("C"),
+                product.Stock.ToString()
+            );
+            index++;
         }
 
         AnsiConsole.Write(table);
@@ -388,7 +471,6 @@ public class ConsoleApp
         grid.AddColumn(new GridColumn().NoWrap());
         grid.AddColumn(new GridColumn());
 
-        grid.AddRow("ID", product.ProductId.ToString());
         grid.AddRow("Name", Markup.Escape(product.Name));
         grid.AddRow("Description", Markup.Escape(product.Description));
         grid.AddRow("Category", Markup.Escape(product.Category?.Name ?? "-"));
@@ -403,9 +485,9 @@ public class ConsoleApp
 
         var panel = new Panel(grid)
         {
-            Header = new PanelHeader($"Product {product.ProductId}", Justify.Center),
+            Header = new PanelHeader($"Product Details", Justify.Center),
             Border = BoxBorder.Rounded,
-            Padding = new Padding(1)
+            Padding = new Padding(1),
         };
 
         AnsiConsole.Write(panel);
@@ -421,9 +503,11 @@ public class ConsoleApp
         var keepGoing = true;
         while (keepGoing)
         {
-            var choice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("[green]Categories[/]")
-                .AddChoices(Menu.Browse, Menu.Create, Menu.Update, Menu.Delete, Menu.Back));
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[green]Categories[/]")
+                    .AddChoices(Menu.Browse, Menu.Create, Menu.Update, Menu.Delete, Menu.Back)
+            );
 
             switch (choice)
             {
@@ -459,12 +543,14 @@ public class ConsoleApp
         {
             var search = PromptOptionalString("Search term (blank to skip):");
             var includeDeleted = AnsiConsole.Confirm("Include deleted categories?", false);
-            var sort = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("Sort by")
-                .AddChoices("Name", "CreatedOn"));
-            var direction = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("Sort direction")
-                .AddChoices(Menu.Ascending, Menu.Descending));
+            var sort = AnsiConsole.Prompt(
+                new SelectionPrompt<string>().Title("Sort by").AddChoices("Name", "CreatedOn")
+            );
+            var direction = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Sort direction")
+                    .AddChoices(Menu.Ascending, Menu.Descending)
+            );
 
             query = new CategoryQuery(
                 Page: 1,
@@ -472,7 +558,8 @@ public class ConsoleApp
                 Search: search,
                 SortBy: sort.ToLowerInvariant(),
                 SortDirection: direction == Menu.Ascending ? "asc" : "desc",
-                IncludeDeleted: includeDeleted);
+                IncludeDeleted: includeDeleted
+            );
         }
 
         // For now, fetch all categories since server doesn't support pagination
@@ -508,7 +595,8 @@ public class ConsoleApp
                     Markup.Escape(category.Name),
                     Markup.Escape(category.Description),
                     category.IsDeleted ? "[red]Yes[/]" : "[green]No[/]",
-                    category.CreatedAt.ToString("yyyy-MM-dd"));
+                    category.CreatedAt.ToString("yyyy-MM-dd")
+                );
             }
 
             table.Caption($"Page {query.Page} of {totalPages} (Total {totalCount})");
@@ -516,7 +604,13 @@ public class ConsoleApp
             AnsiConsole.WriteLine();
 
             // Show pagination menu
-            var newQuery = await ShowCategoryPaginationMenuAsync(query.Page, totalPages, totalCount, query, (q) => Task.CompletedTask);
+            var newQuery = await ShowCategoryPaginationMenuAsync(
+                query.Page,
+                totalPages,
+                totalCount,
+                query,
+                (q) => Task.CompletedTask
+            );
             if (newQuery == null)
             {
                 // User chose to go back
@@ -548,7 +642,10 @@ public class ConsoleApp
     private async Task UpdateCategoryAsync(CancellationToken cancellationToken)
     {
         var id = AnsiConsole.Ask<int>("Enter the [green]category ID[/] to update:");
-        var categories = await _apiClient.GetCategoriesAsync(new CategoryQuery(IncludeDeleted: true), cancellationToken);
+        var categories = await _apiClient.GetCategoriesAsync(
+            new CategoryQuery(IncludeDeleted: true),
+            cancellationToken
+        );
         var existing = categories.Data?.FirstOrDefault(c => c.CategoryId == id);
         if (!categories.Success || existing is null)
         {
@@ -594,24 +691,24 @@ public class ConsoleApp
     {
         var namePrompt = new TextPrompt<string>("Category name:")
             .DefaultValue(existing?.Name ?? string.Empty)
-            .Validate(value => string.IsNullOrWhiteSpace(value)
-                ? ValidationResult.Error("Name is required.")
-                : ValidationResult.Success());
+            .Validate(value =>
+                string.IsNullOrWhiteSpace(value)
+                    ? ValidationResult.Error("Name is required.")
+                    : ValidationResult.Success()
+            );
 
         var descriptionPrompt = new TextPrompt<string>("Description:")
             .DefaultValue(existing?.Description ?? string.Empty)
-            .Validate(value => string.IsNullOrWhiteSpace(value)
-                ? ValidationResult.Error("Description is required.")
-                : ValidationResult.Success());
+            .Validate(value =>
+                string.IsNullOrWhiteSpace(value)
+                    ? ValidationResult.Error("Description is required.")
+                    : ValidationResult.Success()
+            );
 
         var name = AnsiConsole.Prompt(namePrompt);
         var description = AnsiConsole.Prompt(descriptionPrompt);
 
-        return new Category
-        {
-            Name = name,
-            Description = description
-        };
+        return new Category { Name = name, Description = description };
     }
 
     #endregion
@@ -623,9 +720,11 @@ public class ConsoleApp
         var keepGoing = true;
         while (keepGoing)
         {
-            var choice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("[green]Sales[/]")
-                .AddChoices(Menu.Browse, Menu.ViewDetails, Menu.Back));
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[green]Sales[/]")
+                    .AddChoices(Menu.Browse, Menu.ViewDetails, Menu.Back)
+            );
 
             switch (choice)
             {
@@ -657,12 +756,16 @@ public class ConsoleApp
             var startDate = PromptOptionalDate("Start date (yyyy-MM-dd):");
             var endDate = PromptOptionalDate("End date (yyyy-MM-dd):");
             var customer = PromptOptionalString("Customer name contains:");
-            var sort = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("Sort by")
-                .AddChoices("SaleDate", "TotalAmount", "CustomerName"));
-            var direction = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("Sort direction")
-                .AddChoices(Menu.Ascending, Menu.Descending));
+            var sort = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Sort by")
+                    .AddChoices("SaleDate", "TotalAmount", "CustomerName")
+            );
+            var direction = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Sort direction")
+                    .AddChoices(Menu.Ascending, Menu.Descending)
+            );
 
             query = new SaleQuery(
                 Page: 1,
@@ -672,7 +775,8 @@ public class ConsoleApp
                 CustomerName: customer,
                 CustomerEmail: null,
                 SortBy: sort.ToLowerInvariant(),
-                SortDirection: direction == Menu.Ascending ? "asc" : "desc");
+                SortDirection: direction == Menu.Ascending ? "asc" : "desc"
+            );
         }
 
         while (true)
@@ -698,15 +802,22 @@ public class ConsoleApp
                     sale.SaleDate.ToString("yyyy-MM-dd"),
                     Markup.Escape(sale.CustomerName),
                     sale.TotalAmount.ToString("C"),
-                    sale.SaleItems.Count.ToString());
+                    sale.SaleItems.Count.ToString()
+                );
             }
 
-            table.Caption($"Page {result.Data.CurrentPage} of {result.Data.TotalPages} (Total {result.Data.TotalCount})");
+            table.Caption(
+                $"Page {result.Data.CurrentPage} of {result.Data.TotalPages} (Total {result.Data.TotalCount})"
+            );
             AnsiConsole.Write(table);
             AnsiConsole.WriteLine();
 
             // Show pagination menu
-            var newQuery = await ShowSalePaginationMenuAsync(result.Data, query, (q) => Task.CompletedTask);
+            var newQuery = await ShowSalePaginationMenuAsync(
+                result.Data,
+                query,
+                (q) => Task.CompletedTask
+            );
             if (newQuery == null)
             {
                 // User chose to go back
@@ -755,25 +866,26 @@ public class ConsoleApp
                 Markup.Escape(item.Product?.Name ?? item.ProductName),
                 item.Quantity.ToString(),
                 item.UnitPrice.ToString("C"),
-                lineTotal.ToString("C"));
+                lineTotal.ToString("C")
+            );
         }
 
-        var layout = new Layout("root")
-            .SplitRows(
-                new Layout("summary") { Size = 6 },
-                new Layout("items"));
+        var layout = new Layout("root").SplitRows(
+            new Layout("summary") { Size = 6 },
+            new Layout("items")
+        );
 
-        layout["summary"].Update(new Panel(summary)
-        {
-            Header = new PanelHeader($"Sale {sale.SaleId}", Justify.Center),
-            Border = BoxBorder.Rounded
-        });
+        layout["summary"]
+            .Update(
+                new Panel(summary)
+                {
+                    Header = new PanelHeader($"Sale {sale.SaleId}", Justify.Center),
+                    Border = BoxBorder.Rounded,
+                }
+            );
 
-        layout["items"].Update(new Panel(items)
-        {
-            Border = BoxBorder.Square,
-            Padding = new Padding(1)
-        });
+        layout["items"]
+            .Update(new Panel(items) { Border = BoxBorder.Square, Padding = new Padding(1) });
 
         AnsiConsole.Write(layout);
         AnsiConsole.WriteLine();
@@ -830,7 +942,8 @@ public class ConsoleApp
     private static async Task<ProductQuery?> ShowProductPaginationMenuAsync(
         PaginatedResponse<List<Product>> metadata,
         ProductQuery currentQuery,
-        Func<ProductQuery, Task> onPageChange)
+        Func<ProductQuery, Task> onPageChange
+    )
     {
         while (true)
         {
@@ -851,9 +964,13 @@ public class ConsoleApp
             choices.Add("Change Page Size");
             choices.Add("Back to Menu");
 
-            var choice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title($"[green]Page {metadata.CurrentPage} of {metadata.TotalPages} (Total {metadata.TotalCount})[/]")
-                .AddChoices(choices));
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title(
+                        $"[green]Page {metadata.CurrentPage} of {metadata.TotalPages} (Total {metadata.TotalCount})[/]"
+                    )
+                    .AddChoices(choices)
+            );
 
             switch (choice)
             {
@@ -868,10 +985,14 @@ public class ConsoleApp
                     return nextQuery;
 
                 case "Go to Page":
-                    var page = AnsiConsole.Ask<int>($"Enter page number (1-{metadata.TotalPages}):");
+                    var page = AnsiConsole.Ask<int>(
+                        $"Enter page number (1-{metadata.TotalPages}):"
+                    );
                     if (page < 1 || page > metadata.TotalPages)
                     {
-                        RenderWarning($"Invalid page number. Please enter a number between 1 and {metadata.TotalPages}.");
+                        RenderWarning(
+                            $"Invalid page number. Please enter a number between 1 and {metadata.TotalPages}."
+                        );
                         continue;
                     }
                     var pageQuery = currentQuery with { Page = page };
@@ -898,7 +1019,8 @@ public class ConsoleApp
     private static async Task<SaleQuery?> ShowSalePaginationMenuAsync(
         PaginatedResponse<List<Sale>> metadata,
         SaleQuery currentQuery,
-        Func<SaleQuery, Task> onPageChange)
+        Func<SaleQuery, Task> onPageChange
+    )
     {
         while (true)
         {
@@ -919,9 +1041,13 @@ public class ConsoleApp
             choices.Add("Change Page Size");
             choices.Add("Back to Menu");
 
-            var choice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title($"[green]Page {metadata.CurrentPage} of {metadata.TotalPages} (Total {metadata.TotalCount})[/]")
-                .AddChoices(choices));
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title(
+                        $"[green]Page {metadata.CurrentPage} of {metadata.TotalPages} (Total {metadata.TotalCount})[/]"
+                    )
+                    .AddChoices(choices)
+            );
 
             switch (choice)
             {
@@ -936,10 +1062,14 @@ public class ConsoleApp
                     return nextQuery;
 
                 case "Go to Page":
-                    var page = AnsiConsole.Ask<int>($"Enter page number (1-{metadata.TotalPages}):");
+                    var page = AnsiConsole.Ask<int>(
+                        $"Enter page number (1-{metadata.TotalPages}):"
+                    );
                     if (page < 1 || page > metadata.TotalPages)
                     {
-                        RenderWarning($"Invalid page number. Please enter a number between 1 and {metadata.TotalPages}.");
+                        RenderWarning(
+                            $"Invalid page number. Please enter a number between 1 and {metadata.TotalPages}."
+                        );
                         continue;
                     }
                     var pageQuery = currentQuery with { Page = page };
@@ -968,7 +1098,8 @@ public class ConsoleApp
         int totalPages,
         int totalCount,
         CategoryQuery currentQuery,
-        Func<CategoryQuery, Task> onPageChange)
+        Func<CategoryQuery, Task> onPageChange
+    )
     {
         while (true)
         {
@@ -988,9 +1119,11 @@ public class ConsoleApp
             choices.Add("Go to Page");
             choices.Add("Back to Menu");
 
-            var choice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title($"[green]Page {currentPage} of {totalPages} (Total {totalCount})[/]")
-                .AddChoices(choices));
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title($"[green]Page {currentPage} of {totalPages} (Total {totalCount})[/]")
+                    .AddChoices(choices)
+            );
 
             switch (choice)
             {
@@ -1008,7 +1141,9 @@ public class ConsoleApp
                     var page = AnsiConsole.Ask<int>($"Enter page number (1-{totalPages}):");
                     if (page < 1 || page > totalPages)
                     {
-                        RenderWarning($"Invalid page number. Please enter a number between 1 and {totalPages}.");
+                        RenderWarning(
+                            $"Invalid page number. Please enter a number between 1 and {totalPages}."
+                        );
                         continue;
                     }
                     var pageQuery = currentQuery with { Page = page };
