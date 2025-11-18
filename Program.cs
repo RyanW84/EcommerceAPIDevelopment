@@ -201,6 +201,31 @@ public class Program
         // Optional: simple root endpoint - redirect to Scalar API documentation
         app.MapGet("/", () => Results.Redirect("/scalar/v1"));
 
+        // Open browser automatically in development
+        if (app.Environment.IsDevelopment())
+        {
+            var urls = app.Urls;
+            if (urls.Count > 0)
+            {
+                var url = urls.First().Replace("http://", "https://") + "/scalar/v1";
+                try
+                {
+                    System.Diagnostics.Process.Start(
+                        new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = url,
+                            UseShellExecute = true,
+                        }
+                    );
+                    app.Logger.LogInformation("Browser opened to: {Url}", url);
+                }
+                catch (Exception ex)
+                {
+                    app.Logger.LogWarning(ex, "Failed to open browser automatically");
+                }
+            }
+        }
+
         app.Run();
     }
 }

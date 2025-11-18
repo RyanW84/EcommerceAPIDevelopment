@@ -12,7 +12,7 @@ public class ClientServerSeparationTests
     {
         "Microsoft.AspNetCore.Session",
         "Microsoft.AspNetCore.Http.ISession",
-        "Microsoft.AspNetCore.Http.IHttpContextAccessor"
+        "Microsoft.AspNetCore.Http.IHttpContextAccessor",
     };
 
     [Fact]
@@ -36,7 +36,7 @@ public class ClientServerSeparationTests
             "ECommerceApp.RyanW84.Services",
             "ECommerceApp.RyanW84.Repositories",
             "ECommerceApp.RyanW84.Controllers",
-            "Microsoft.EntityFrameworkCore"
+            "Microsoft.EntityFrameworkCore",
         };
 
         var result = Types
