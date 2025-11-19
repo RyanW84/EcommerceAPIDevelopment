@@ -68,7 +68,7 @@ public class ProductController(IProductService productService) : ControllerBase
         );
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     // POST /api/products
@@ -86,11 +86,7 @@ public class ProductController(IProductService productService) : ControllerBase
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
 
-        return CreatedAtAction(
-            nameof(GetProductById),
-            new { id = result.Data!.ProductId },
-            result.Data
-        );
+        return CreatedAtAction(nameof(GetProductById), new { id = result.Data!.ProductId }, result);
     }
 
     // PUT /api/products/{id}
@@ -108,7 +104,7 @@ public class ProductController(IProductService productService) : ControllerBase
         var result = await _productService.UpdateProductAsync(id, request, cancellationToken);
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     // DELETE /api/products/{id}
@@ -135,7 +131,7 @@ public class ProductController(IProductService productService) : ControllerBase
         var result = await _productService.GetDeletedProductsAsync(cancellationToken);
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     // POST /api/products/{id}/restore
@@ -149,6 +145,6 @@ public class ProductController(IProductService productService) : ControllerBase
         var result = await _productService.RestoreProductAsync(id, cancellationToken);
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 }

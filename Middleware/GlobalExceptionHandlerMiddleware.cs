@@ -10,10 +10,13 @@ public class GlobalExceptionHandlerMiddleware
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        WriteIndented = true
+        WriteIndented = true,
     };
 
-    public GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)
+    public GlobalExceptionHandlerMiddleware(
+        RequestDelegate next,
+        ILogger<GlobalExceptionHandlerMiddleware> logger
+    )
     {
         _next = next;
         _logger = logger;
@@ -38,17 +41,42 @@ public class GlobalExceptionHandlerMiddleware
 
         var (statusCode, message) = exception switch
         {
-            ArgumentNullException => ((int)HttpStatusCode.BadRequest, "Required parameter is missing."),
-            ArgumentOutOfRangeException => ((int)HttpStatusCode.BadRequest, "Parameter value is out of acceptable range."),
+            ArgumentNullException => (
+                (int)HttpStatusCode.BadRequest,
+                "Required parameter is missing."
+            ),
+            ArgumentOutOfRangeException => (
+                (int)HttpStatusCode.BadRequest,
+                "Parameter value is out of acceptable range."
+            ),
             ArgumentException => ((int)HttpStatusCode.BadRequest, "Invalid argument provided."),
-            KeyNotFoundException => ((int)HttpStatusCode.NotFound, "The requested resource was not found."),
+            KeyNotFoundException => (
+                (int)HttpStatusCode.NotFound,
+                "The requested resource was not found."
+            ),
             UnauthorizedAccessException => ((int)HttpStatusCode.Unauthorized, "Access is denied."),
-            InvalidOperationException => ((int)HttpStatusCode.BadRequest, "The operation is not valid in the current state."),
+            InvalidOperationException => (
+                (int)HttpStatusCode.BadRequest,
+                "The operation is not valid in the current state."
+            ),
+            NotSupportedException => (
+                (int)HttpStatusCode.BadRequest,
+                "The requested operation is not supported."
+            ),
             TimeoutException => ((int)HttpStatusCode.RequestTimeout, "The operation timed out."),
-            OperationCanceledException => ((int)HttpStatusCode.RequestTimeout, "The operation was cancelled."),
+            OperationCanceledException => (
+                (int)HttpStatusCode.RequestTimeout,
+                "The operation was cancelled."
+            ),
             FormatException => ((int)HttpStatusCode.BadRequest, "Invalid data format."),
-            OverflowException => ((int)HttpStatusCode.BadRequest, "Numeric value is too large or too small."),
-            _ => ((int)HttpStatusCode.InternalServerError, "An unexpected error occurred. Please try again later.")
+            OverflowException => (
+                (int)HttpStatusCode.BadRequest,
+                "Numeric value is too large or too small."
+            ),
+            _ => (
+                (int)HttpStatusCode.InternalServerError,
+                "An unexpected error occurred. Please try again later."
+            ),
         };
 
         var response = new
@@ -57,8 +85,8 @@ public class GlobalExceptionHandlerMiddleware
             {
                 message = message,
                 type = exception.GetType().Name,
-                timestamp = DateTime.UtcNow
-            }
+                timestamp = DateTime.UtcNow,
+            },
         };
 
         context.Response.StatusCode = statusCode;

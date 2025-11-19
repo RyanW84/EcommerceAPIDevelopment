@@ -6,13 +6,12 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace ECommerceApp.ConsoleClient.Services
 {
-
     public class ECommerceApiClient
     {
         private static readonly JsonSerializerOptions SerializerOptions = new()
         {
             PropertyNameCaseInsensitive = true,
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
         };
 
         private readonly HttpClient _httpClient;
@@ -24,36 +23,63 @@ namespace ECommerceApp.ConsoleClient.Services
 
         public async Task<ApiResult<PaginatedResponse<List<Product>>>> GetProductsAsync(
             ProductQuery query,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             var uri = QueryHelpers.AddQueryString("api/Product", BuildQueryDictionary(query));
             using var response = await _httpClient.GetAsync(uri, cancellationToken);
             return await ReadPaginatedResponseAsync<List<Product>>(response, cancellationToken);
         }
 
-        public async Task<ApiResult<Product>> GetProductByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<Product>> GetProductByIdAsync(
+            int id,
+            CancellationToken cancellationToken = default
+        )
         {
             using var response = await _httpClient.GetAsync($"api/Product/{id}", cancellationToken);
             return await ReadResultAsync<Product>(response, cancellationToken);
         }
 
-        public async Task<ApiResult<Product>> CreateProductAsync(Product product, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<Product>> CreateProductAsync(
+            Product product,
+            CancellationToken cancellationToken = default
+        )
         {
             var payload = new ApiRequest<Product>(product);
-            using var response = await _httpClient.PostAsJsonAsync("api/Product", payload, SerializerOptions, cancellationToken);
+            using var response = await _httpClient.PostAsJsonAsync(
+                "api/Product",
+                payload,
+                SerializerOptions,
+                cancellationToken
+            );
             return await ReadResultAsync<Product>(response, cancellationToken);
         }
 
-        public async Task<ApiResult<Product>> UpdateProductAsync(int id, Product product, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<Product>> UpdateProductAsync(
+            int id,
+            Product product,
+            CancellationToken cancellationToken = default
+        )
         {
             var payload = new ApiRequest<Product>(product);
-            using var response = await _httpClient.PutAsJsonAsync($"api/Product/{id}", payload, SerializerOptions, cancellationToken);
+            using var response = await _httpClient.PutAsJsonAsync(
+                $"api/Product/{id}",
+                payload,
+                SerializerOptions,
+                cancellationToken
+            );
             return await ReadResultAsync<Product>(response, cancellationToken);
         }
 
-        public async Task<ApiResult<bool>> DeleteProductAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<bool>> DeleteProductAsync(
+            int id,
+            CancellationToken cancellationToken = default
+        )
         {
-            using var response = await _httpClient.DeleteAsync($"api/Product/{id}", cancellationToken);
+            using var response = await _httpClient.DeleteAsync(
+                $"api/Product/{id}",
+                cancellationToken
+            );
             if (response.IsSuccessStatusCode)
             {
                 return ApiResult<bool>.CreateSuccess(true, response.StatusCode);
@@ -65,30 +91,54 @@ namespace ECommerceApp.ConsoleClient.Services
 
         public async Task<ApiResult<List<Category>>> GetCategoriesAsync(
             CategoryQuery query,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             var uri = QueryHelpers.AddQueryString("api/Categories", BuildQueryDictionary(query));
             using var response = await _httpClient.GetAsync(uri, cancellationToken);
             return await ReadResultAsync<List<Category>>(response, cancellationToken);
         }
 
-        public async Task<ApiResult<Category>> CreateCategoryAsync(Category category, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<Category>> CreateCategoryAsync(
+            Category category,
+            CancellationToken cancellationToken = default
+        )
         {
             var payload = new ApiRequest<Category>(category);
-            using var response = await _httpClient.PostAsJsonAsync("api/Categories", payload, SerializerOptions, cancellationToken);
+            using var response = await _httpClient.PostAsJsonAsync(
+                "api/Categories",
+                payload,
+                SerializerOptions,
+                cancellationToken
+            );
             return await ReadResultAsync<Category>(response, cancellationToken);
         }
 
-        public async Task<ApiResult<Category>> UpdateCategoryAsync(int id, Category category, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<Category>> UpdateCategoryAsync(
+            int id,
+            Category category,
+            CancellationToken cancellationToken = default
+        )
         {
             var payload = new ApiRequest<Category>(category);
-            using var response = await _httpClient.PutAsJsonAsync($"api/Categories/{id}", payload, SerializerOptions, cancellationToken);
+            using var response = await _httpClient.PutAsJsonAsync(
+                $"api/Categories/{id}",
+                payload,
+                SerializerOptions,
+                cancellationToken
+            );
             return await ReadResultAsync<Category>(response, cancellationToken);
         }
 
-        public async Task<ApiResult<bool>> DeleteCategoryAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<bool>> DeleteCategoryAsync(
+            int id,
+            CancellationToken cancellationToken = default
+        )
         {
-            using var response = await _httpClient.DeleteAsync($"api/Categories/{id}", cancellationToken);
+            using var response = await _httpClient.DeleteAsync(
+                $"api/Categories/{id}",
+                cancellationToken
+            );
             if (response.IsSuccessStatusCode)
             {
                 return ApiResult<bool>.CreateSuccess(true, response.StatusCode);
@@ -98,7 +148,10 @@ namespace ECommerceApp.ConsoleClient.Services
             return ApiResult<bool>.CreateFailure(error.Message, response.StatusCode);
         }
 
-        public async Task<ApiResult<Sale>> GetSaleByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<Sale>> GetSaleByIdAsync(
+            int id,
+            CancellationToken cancellationToken = default
+        )
         {
             using var response = await _httpClient.GetAsync($"api/Sales/{id}", cancellationToken);
             return await ReadResultAsync<Sale>(response, cancellationToken);
@@ -106,18 +159,61 @@ namespace ECommerceApp.ConsoleClient.Services
 
         public async Task<ApiResult<PaginatedResponse<List<Sale>>>> GetSalesAsync(
             SaleQuery query,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             var uri = QueryHelpers.AddQueryString("api/Sales", BuildQueryDictionary(query));
             using var response = await _httpClient.GetAsync(uri, cancellationToken);
             return await ReadPaginatedResponseAsync<List<Sale>>(response, cancellationToken);
         }
 
-        public async Task<ApiResult<Sale>> CreateSaleAsync(Sale sale, CancellationToken cancellationToken = default)
+        public async Task<ApiResult<Sale>> CreateSaleAsync(
+            Sale sale,
+            CancellationToken cancellationToken = default
+        )
         {
             var payload = new ApiRequest<Sale>(sale);
-            using var response = await _httpClient.PostAsJsonAsync("api/Sales", payload, SerializerOptions, cancellationToken);
+            using var response = await _httpClient.PostAsJsonAsync(
+                "api/Sales",
+                payload,
+                SerializerOptions,
+                cancellationToken
+            );
             return await ReadResultAsync<Sale>(response, cancellationToken);
+        }
+
+        public async Task<ApiResult<Sale>> UpdateSaleAsync(
+            int id,
+            Sale sale,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var payload = new ApiRequest<Sale>(sale);
+            using var response = await _httpClient.PutAsJsonAsync(
+                $"api/Sales/{id}",
+                payload,
+                SerializerOptions,
+                cancellationToken
+            );
+            return await ReadResultAsync<Sale>(response, cancellationToken);
+        }
+
+        public async Task<ApiResult<bool>> DeleteSaleAsync(
+            int id,
+            CancellationToken cancellationToken = default
+        )
+        {
+            using var response = await _httpClient.DeleteAsync(
+                $"api/Sales/{id}",
+                cancellationToken
+            );
+            if (response.IsSuccessStatusCode)
+            {
+                return ApiResult<bool>.CreateSuccess(true, response.StatusCode);
+            }
+
+            var error = await ReadErrorAsync(response, cancellationToken);
+            return ApiResult<bool>.CreateFailure(error.Message, response.StatusCode);
         }
 
         private static Dictionary<string, string?> BuildQueryDictionary(object query)
@@ -126,22 +222,23 @@ namespace ECommerceApp.ConsoleClient.Services
                 .GetType()
                 .GetProperties()
                 .Where(prop => prop.GetValue(query) is not null)
-                .ToDictionary(
-                    prop => prop.Name,
-                    prop => ConvertToString(prop.GetValue(query))
-                );
+                .ToDictionary(prop => prop.Name, prop => ConvertToString(prop.GetValue(query)));
         }
 
-        private static string? ConvertToString(object? value) => value switch
-        {
-            null => null,
-            bool b => b.ToString().ToLowerInvariant(),
-            DateTime dt => dt.ToString("O"),
-            DateTimeOffset dto => dto.ToString("O"),
-            _ => value.ToString()
-        };
+        private static string? ConvertToString(object? value) =>
+            value switch
+            {
+                null => null,
+                bool b => b.ToString().ToLowerInvariant(),
+                DateTime dt => dt.ToString("O"),
+                DateTimeOffset dto => dto.ToString("O"),
+                _ => value.ToString(),
+            };
 
-        private static async Task<ApiResult<T>> ReadResultAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
+        private static async Task<ApiResult<T>> ReadResultAsync<T>(
+            HttpResponseMessage response,
+            CancellationToken cancellationToken
+        )
         {
             if (response.IsSuccessStatusCode)
             {
@@ -150,7 +247,10 @@ namespace ECommerceApp.ConsoleClient.Services
                     return ApiResult<T>.CreateSuccess(default, response.StatusCode);
                 }
 
-                var data = await response.Content.ReadFromJsonAsync<ApiResponse<T>>(SerializerOptions, cancellationToken);
+                var data = await response.Content.ReadFromJsonAsync<ApiResponse<T>>(
+                    SerializerOptions,
+                    cancellationToken
+                );
                 if (data is null)
                 {
                     return ApiResult<T>.CreateSuccess(default, response.StatusCode);
@@ -170,11 +270,15 @@ namespace ECommerceApp.ConsoleClient.Services
 
         private static async Task<ApiResult<PaginatedResponse<T>>> ReadPaginatedResponseAsync<T>(
             HttpResponseMessage response,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken
+        )
         {
             if (response.IsSuccessStatusCode)
             {
-                var body = await response.Content.ReadFromJsonAsync<PaginatedResponse<T>>(SerializerOptions, cancellationToken);
+                var body = await response.Content.ReadFromJsonAsync<PaginatedResponse<T>>(
+                    SerializerOptions,
+                    cancellationToken
+                );
                 if (body is null)
                 {
                     return ApiResult<PaginatedResponse<T>>.CreateSuccess(null, response.StatusCode);
@@ -182,17 +286,26 @@ namespace ECommerceApp.ConsoleClient.Services
 
                 if (body.RequestFailed)
                 {
-                    return ApiResult<PaginatedResponse<T>>.CreateFailure(body.ErrorMessage, response.StatusCode);
+                    return ApiResult<PaginatedResponse<T>>.CreateFailure(
+                        body.ErrorMessage,
+                        response.StatusCode
+                    );
                 }
 
                 return ApiResult<PaginatedResponse<T>>.CreateSuccess(body, response.StatusCode);
             }
 
             var error = await ReadErrorAsync(response, cancellationToken);
-            return ApiResult<PaginatedResponse<T>>.CreateFailure(error.Message, response.StatusCode);
+            return ApiResult<PaginatedResponse<T>>.CreateFailure(
+                error.Message,
+                response.StatusCode
+            );
         }
 
-        private static async Task<ApiError> ReadErrorAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+        private static async Task<ApiError> ReadErrorAsync(
+            HttpResponseMessage response,
+            CancellationToken cancellationToken
+        )
         {
             var statusCode = response.StatusCode;
             if (response.Content.Headers.ContentLength == 0)
@@ -243,11 +356,20 @@ namespace ECommerceApp.ConsoleClient.Services
             StatusCode = statusCode;
         }
 
-        public static ApiResult<T> CreateSuccess(T? data, HttpStatusCode statusCode) => new(true, data, string.Empty, statusCode);
-        public static ApiResult<T> CreateFailure(string message, HttpStatusCode statusCode) => new(false, default, message, statusCode);
+        public static ApiResult<T> CreateSuccess(T? data, HttpStatusCode statusCode) =>
+            new(true, data, string.Empty, statusCode);
+
+        public static ApiResult<T> CreateFailure(string message, HttpStatusCode statusCode) =>
+            new(false, default, message, statusCode);
     }
 
     public record ApiError(HttpStatusCode StatusCode, string Message);
 
-    public record ProblemDetails(string? Title, string? Detail, int? Status, string? Instance, string? Type);
+    public record ProblemDetails(
+        string? Title,
+        string? Detail,
+        int? Status,
+        string? Instance,
+        string? Type
+    );
 }

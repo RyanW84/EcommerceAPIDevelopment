@@ -30,7 +30,7 @@ public class SalesController : ControllerBase
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
 
-        return CreatedAtAction(nameof(GetById), new { id = result.Data!.SaleId }, result.Data);
+        return CreatedAtAction(nameof(GetById), new { id = result.Data!.SaleId }, result);
     }
 
     [HttpGet("{id:int}")]
@@ -70,7 +70,7 @@ public class SalesController : ControllerBase
         var result = await _saleService.GetHistoricalSalesAsync(cancellationToken);
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     [HttpGet("{id:int}/with-deleted-products")]
@@ -86,6 +86,6 @@ public class SalesController : ControllerBase
         );
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 }

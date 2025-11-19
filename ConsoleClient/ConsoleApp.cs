@@ -381,12 +381,12 @@ public class ConsoleApp
 
         return new Product
         {
+            ProductId = existing?.ProductId ?? 0,
             Name = name,
             Description = description,
             Price = price,
             Stock = stock,
             CategoryId = category.CategoryId,
-            Category = category,
             IsActive = isActive,
         };
     }
@@ -401,6 +401,19 @@ public class ConsoleApp
         }
 
         return result.Data.OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase).ToArray();
+    }
+
+    private async Task<Product[]> LoadProductsAsync(CancellationToken cancellationToken)
+    {
+        var query = new ProductQuery(PageSize: 100);
+        var result = await _apiClient.GetProductsAsync(query, cancellationToken);
+        if (!result.Success || result.Data?.Data is null)
+        {
+            RenderError(result.Message.Length == 0 ? "Unable to load products." : result.Message);
+            return Array.Empty<Product>();
+        }
+
+        return result.Data.Data.OrderBy(p => p.Name).ToArray();
     }
 
     private static void RenderProductTable(
@@ -708,7 +721,128 @@ public class ConsoleApp
         var name = AnsiConsole.Prompt(namePrompt);
         var description = AnsiConsole.Prompt(descriptionPrompt);
 
-        return new Category { Name = name, Description = description };
+        return new Category
+        {
+            CategoryId = existing?.CategoryId ?? 0,
+            Name = name,
+            Description = description,
+        };
+    }
+
+    private async Task<Sale?> PromptForSaleAsync(
+        CancellationToken cancellationToken,
+        Sale? existing = null
+    )
+    {
+        var customerNamePrompt = new TextPrompt<string>("Customer name:")
+            .DefaultValue(existing?.CustomerName ?? string.Empty)
+            .Validate(value =>
+                string.IsNullOrWhiteSpace(value)
+                    ? ValidationResult.Error("Customer name is required.")
+                    : ValidationResult.Success()
+            );
+
+        var customerEmailPrompt = new TextPrompt<string>("Customer email:")
+            .DefaultValue(existing?.CustomerEmail ?? string.Empty)
+            .Validate(value =>
+                string.IsNullOrWhiteSpace(value)
+                    ? ValidationResult.Error("Customer email is required.")
+                    : ValidationResult.Success()
+            );
+
+        var customerAddressPrompt = new TextPrompt<string>("Customer address:")
+            .DefaultValue(existing?.CustomerAddress ?? string.Empty)
+            .Validate(value =>
+                string.IsNullOrWhiteSpace(value)
+                    ? ValidationResult.Error("Customer address is required.")
+                    : ValidationResult.Success()
+            );
+
+        var saleDatePrompt = new TextPrompt<DateTime>("Sale date (yyyy-MM-dd HH:mm):")
+            .DefaultValue(existing?.SaleDate ?? DateTime.Now)
+            .Validate(value =>
+                value <= DateTime.Now
+                    ? ValidationResult.Success()
+                    : ValidationResult.Error("Sale date cannot be in the future.")
+            );
+
+        var customerName = AnsiConsole.Prompt(customerNamePrompt);
+        var customerEmail = AnsiConsole.Prompt(customerEmailPrompt);
+        var customerAddress = AnsiConsole.Prompt(customerAddressPrompt);
+        var saleDate = AnsiConsole.Prompt(saleDatePrompt);
+
+        // Prompt for sale items
+        var saleItems = new List<SaleItem>();
+        var addItems = AnsiConsole.Confirm("Add sale items?", true);
+
+        if (addItems)
+        {
+            var addMore = true;
+            while (addMore)
+            {
+                var products = await LoadProductsAsync(cancellationToken);
+                if (products.Length == 0)
+                {
+                    RenderError("No products available.");
+                    break;
+                }
+
+                var productPrompt = new SelectionPrompt<Product>()
+                    .Title("Select product for this sale")
+                    .UseConverter(p => $"{p.ProductId}: {p.Name} (${p.Price})")
+                    .AddChoices(products)
+                    .PageSize(10);
+
+                var product = AnsiConsole.Prompt(productPrompt);
+
+                var quantityPrompt = new TextPrompt<int>("Quantity:").Validate(value =>
+                    value > 0
+                        ? ValidationResult.Success()
+                        : ValidationResult.Error("Quantity must be positive.")
+                );
+
+                var quantity = AnsiConsole.Prompt(quantityPrompt);
+
+                saleItems.Add(
+                    new SaleItem
+                    {
+                        ProductId = product.ProductId,
+                        ProductName = product.Name,
+                        Quantity = quantity,
+                        UnitPrice = product.Price,
+                        LineTotal = product.Price * quantity,
+                        Product = product,
+                    }
+                );
+
+                addMore = AnsiConsole.Confirm("Add another item?", false);
+            }
+        }
+
+        // Use existing items if not updating or if no new items added
+        if (existing is not null && saleItems.Count == 0)
+        {
+            saleItems = existing.SaleItems;
+        }
+
+        if (saleItems.Count == 0)
+        {
+            RenderWarning("At least one item is required for a sale.");
+            return null;
+        }
+
+        var totalAmount = saleItems.Sum(si => si.LineTotal);
+
+        return new Sale
+        {
+            SaleId = existing?.SaleId ?? 0,
+            SaleDate = saleDate,
+            TotalAmount = totalAmount,
+            CustomerName = customerName,
+            CustomerEmail = customerEmail,
+            CustomerAddress = customerAddress,
+            SaleItems = saleItems,
+        };
     }
 
     #endregion
@@ -723,7 +857,14 @@ public class ConsoleApp
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[green]Sales[/]")
-                    .AddChoices(Menu.Browse, Menu.ViewDetails, Menu.Back)
+                    .AddChoices(
+                        Menu.Browse,
+                        Menu.ViewDetails,
+                        Menu.Create,
+                        Menu.Update,
+                        Menu.Delete,
+                        Menu.Back
+                    )
             );
 
             switch (choice)
@@ -733,6 +874,15 @@ public class ConsoleApp
                     break;
                 case Menu.ViewDetails:
                     await ViewSaleDetailsAsync(cancellationToken);
+                    break;
+                case Menu.Create:
+                    await CreateSaleAsync(cancellationToken);
+                    break;
+                case Menu.Update:
+                    await UpdateSaleAsync(cancellationToken);
+                    break;
+                case Menu.Delete:
+                    await DeleteSaleAsync(cancellationToken);
                     break;
                 case Menu.Back:
                     keepGoing = false;
@@ -889,6 +1039,70 @@ public class ConsoleApp
 
         AnsiConsole.Write(layout);
         AnsiConsole.WriteLine();
+    }
+
+    private async Task CreateSaleAsync(CancellationToken cancellationToken)
+    {
+        var sale = await PromptForSaleAsync(cancellationToken);
+        if (sale is null)
+        {
+            return;
+        }
+
+        var result = await _apiClient.CreateSaleAsync(sale, cancellationToken);
+        if (!result.Success)
+        {
+            RenderError(result.Message);
+            return;
+        }
+
+        RenderSuccess(
+            $"Sale created successfully with ID {result.Data?.SaleId} for {result.Data?.CustomerName}."
+        );
+    }
+
+    private async Task UpdateSaleAsync(CancellationToken cancellationToken)
+    {
+        var id = AnsiConsole.Ask<int>("Enter the [green]sale ID[/] to update:");
+        var existing = await _apiClient.GetSaleByIdAsync(id, cancellationToken);
+        if (!existing.Success || existing.Data is null)
+        {
+            RenderError(existing.Message.Length == 0 ? "Sale not found." : existing.Message);
+            return;
+        }
+
+        var updated = await PromptForSaleAsync(cancellationToken, existing.Data);
+        if (updated is null)
+        {
+            return;
+        }
+
+        var result = await _apiClient.UpdateSaleAsync(id, updated, cancellationToken);
+        if (!result.Success)
+        {
+            RenderError(result.Message);
+            return;
+        }
+
+        RenderSuccess($"Sale {id} updated successfully.");
+    }
+
+    private async Task DeleteSaleAsync(CancellationToken cancellationToken)
+    {
+        var id = AnsiConsole.Ask<int>("Enter the [green]sale ID[/] to delete:");
+        if (!AnsiConsole.Confirm("Are you sure you want to delete this sale?", false))
+        {
+            return;
+        }
+
+        var result = await _apiClient.DeleteSaleAsync(id, cancellationToken);
+        if (!result.Success)
+        {
+            RenderError(result.Message);
+            return;
+        }
+
+        RenderSuccess("Sale deleted successfully.");
     }
 
     #endregion

@@ -31,7 +31,7 @@ public class CategoriesController : ControllerBase
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
 
-        return CreatedAtAction(nameof(GetById), new { id = result.Data!.CategoryId }, result.Data);
+        return CreatedAtAction(nameof(GetById), new { id = result.Data!.CategoryId }, result);
     }
 
     // GET /api/categories
@@ -81,7 +81,7 @@ public class CategoriesController : ControllerBase
         var result = await _categoryService.GetCategoryByNameAsync(name, cancellationToken);
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     // PUT /api/categories/{id}
@@ -99,7 +99,7 @@ public class CategoriesController : ControllerBase
         var result = await _categoryService.UpdateCategoryAsync(id, request, cancellationToken);
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     // DELETE /api/categories/{id}
@@ -121,7 +121,7 @@ public class CategoriesController : ControllerBase
         var result = await _categoryService.GetDeletedCategoriesAsync(cancellationToken);
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
-        return Ok(result.Data);
+        return Ok(result);
     }
 
     // POST /api/categories/{id}/restore

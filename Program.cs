@@ -110,13 +110,22 @@ public class Program
             var db = scope.ServiceProvider.GetRequiredService<ECommerceDbContext>();
             try
             {
-                // Applies any pending migrations; creates database if it doesn't exist
-                db.Database.Migrate();
-
-                // Seed data in Development environment if database is empty
+                // In development mode, delete and recreate the database with seed data
                 if (app.Environment.IsDevelopment())
                 {
-                    // Force reseeding for testing
+                    app.Logger.LogInformation("Development mode detected: deleting and recreating database...");
+                    db.Database.EnsureDeleted();
+                    app.Logger.LogInformation("Database deleted.");
+                }
+
+                // Applies any pending migrations; creates database if it doesn't exist
+                db.Database.Migrate();
+                app.Logger.LogInformation("Database migrations applied.");
+
+                // Seed data in Development environment
+                if (app.Environment.IsDevelopment())
+                {
+                    // Seed with fresh test data
                     db.SeedData();
                     db.SaveChanges();
                     app.Logger.LogInformation("Database seeded with initial data.");
