@@ -113,7 +113,9 @@ public class Program
                 // In development mode, delete and recreate the database with seed data
                 if (app.Environment.IsDevelopment())
                 {
-                    app.Logger.LogInformation("Development mode detected: deleting and recreating database...");
+                    app.Logger.LogInformation(
+                        "Development mode detected: deleting and recreating database..."
+                    );
                     db.Database.EnsureDeleted();
                     app.Logger.LogInformation("Database deleted.");
                 }
