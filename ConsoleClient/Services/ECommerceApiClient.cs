@@ -11,7 +11,15 @@ namespace ECommerceApp.ConsoleClient.Services
         private static readonly JsonSerializerOptions SerializerOptions = new()
         {
             PropertyNameCaseInsensitive = true,
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            // Don't use ReferenceHandler for deserialization - it causes issues with nested objects
+            WriteIndented = true,
+        };
+
+        private static readonly JsonSerializerOptions RequestSerializerOptions = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            // Don't use ReferenceHandler for requests - keep them simple
+            WriteIndented = true,
         };
 
         private readonly HttpClient _httpClient;
@@ -49,7 +57,7 @@ namespace ECommerceApp.ConsoleClient.Services
             using var response = await _httpClient.PostAsJsonAsync(
                 "api/Product",
                 payload,
-                SerializerOptions,
+                RequestSerializerOptions,
                 cancellationToken
             );
             return await ReadResultAsync<Product>(response, cancellationToken);
@@ -65,7 +73,7 @@ namespace ECommerceApp.ConsoleClient.Services
             using var response = await _httpClient.PutAsJsonAsync(
                 $"api/Product/{id}",
                 payload,
-                SerializerOptions,
+                RequestSerializerOptions,
                 cancellationToken
             );
             return await ReadResultAsync<Product>(response, cancellationToken);
@@ -108,7 +116,7 @@ namespace ECommerceApp.ConsoleClient.Services
             using var response = await _httpClient.PostAsJsonAsync(
                 "api/Categories",
                 payload,
-                SerializerOptions,
+                RequestSerializerOptions,
                 cancellationToken
             );
             return await ReadResultAsync<Category>(response, cancellationToken);
@@ -124,7 +132,7 @@ namespace ECommerceApp.ConsoleClient.Services
             using var response = await _httpClient.PutAsJsonAsync(
                 $"api/Categories/{id}",
                 payload,
-                SerializerOptions,
+                RequestSerializerOptions,
                 cancellationToken
             );
             return await ReadResultAsync<Category>(response, cancellationToken);
@@ -176,7 +184,7 @@ namespace ECommerceApp.ConsoleClient.Services
             using var response = await _httpClient.PostAsJsonAsync(
                 "api/Sales",
                 payload,
-                SerializerOptions,
+                RequestSerializerOptions,
                 cancellationToken
             );
             return await ReadResultAsync<Sale>(response, cancellationToken);
@@ -192,7 +200,7 @@ namespace ECommerceApp.ConsoleClient.Services
             using var response = await _httpClient.PutAsJsonAsync(
                 $"api/Sales/{id}",
                 payload,
-                SerializerOptions,
+                RequestSerializerOptions,
                 cancellationToken
             );
             return await ReadResultAsync<Sale>(response, cancellationToken);

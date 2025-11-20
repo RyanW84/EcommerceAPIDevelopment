@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ECommerceApp.RyanW84.Data.Models;
 
@@ -14,6 +15,7 @@ public class Product : BaseEntity
     public int CategoryId { get; set; }
     public Category? Category { get; set; }
 
-    // now hold sale items (join)
+    // Don't serialize SaleItems to avoid circular references
+    [JsonIgnore]
     public ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
 }

@@ -15,11 +15,7 @@ public class ProductController(IProductService productService) : ControllerBase
 
     // GET /api/products
     [HttpGet]
-    [ResponseCache(
-        Duration = 60,
-        Location = ResponseCacheLocation.Any,
-        VaryByQueryKeys = new[] { "*" }
-    )]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> GetProductsAsync(
         [FromQuery] ProductQueryParameters queryParameters,
         CancellationToken cancellationToken = default
@@ -145,6 +141,26 @@ public class ProductController(IProductService productService) : ControllerBase
         var result = await _productService.RestoreProductAsync(id, cancellationToken);
         if (result.RequestFailed)
             return this.FromFailure(result.ResponseCode, result.ErrorMessage);
+        return Ok(result);
+    }
+
+    // DEBUG endpoint - remove after troubleshooting
+    [HttpGet("debug/latest")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    public async Task<IActionResult> GetLatestProductAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await _productService.GetProductsAsync(
+            new ProductQueryParameters
+            {
+                Page = 1,
+                PageSize = 1,
+                SortDirection = "desc",
+                SortBy = "createdat",
+            },
+            cancellationToken
+        );
         return Ok(result);
     }
 }

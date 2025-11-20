@@ -21,7 +21,8 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         {
             var sale = await _db
                 .Sales.AsNoTracking()
-                .Include(s => s.SaleItems).ThenInclude(si => si.Product)
+                .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
                 .Include(s => s.Categories)
                 .FirstOrDefaultAsync(s => s.SaleId == id, cancellationToken);
 
@@ -45,18 +46,33 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         }
     }
 
-    private static IQueryable<Sale> ApplySaleSorting(IQueryable<Sale> query, string? sortBy, bool descending)
+    private static IQueryable<Sale> ApplySaleSorting(
+        IQueryable<Sale> query,
+        string? sortBy,
+        bool descending
+    )
     {
         return sortBy switch
         {
-            "customername" => descending ? query.OrderByDescending(s => s.CustomerName) : query.OrderBy(s => s.CustomerName),
-            "totalamount" => descending ? query.OrderByDescending(s => s.TotalAmount) : query.OrderBy(s => s.TotalAmount),
-            "saledate" => descending ? query.OrderByDescending(s => s.SaleDate) : query.OrderBy(s => s.SaleDate),
-            _ => descending ? query.OrderByDescending(s => s.SaleDate) : query.OrderBy(s => s.SaleDate)
+            "customername" => descending
+                ? query.OrderByDescending(s => s.CustomerName)
+                : query.OrderBy(s => s.CustomerName),
+            "totalamount" => descending
+                ? query.OrderByDescending(s => s.TotalAmount)
+                : query.OrderBy(s => s.TotalAmount),
+            "saledate" => descending
+                ? query.OrderByDescending(s => s.SaleDate)
+                : query.OrderBy(s => s.SaleDate),
+            _ => descending
+                ? query.OrderByDescending(s => s.SaleDate)
+                : query.OrderBy(s => s.SaleDate),
         };
     }
 
-    public async Task<PaginatedResponseDto<List<Sale>>> GetAllSalesAsync(SaleQueryParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponseDto<List<Sale>>> GetAllSalesAsync(
+        SaleQueryParameters parameters,
+        CancellationToken cancellationToken = default
+    )
     {
         parameters ??= new SaleQueryParameters();
 
@@ -67,7 +83,8 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         {
             var query = _db
                 .Sales.AsNoTracking()
-                .Include(s => s.SaleItems).ThenInclude(si => si.Product)
+                .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
                 .Include(s => s.Categories)
                 .AsQueryable();
 
@@ -94,7 +111,11 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
                 query = query.Where(s => s.CustomerEmail == customerEmail);
             }
 
-            var descending = string.Equals(parameters.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+            var descending = string.Equals(
+                parameters.SortDirection,
+                "desc",
+                StringComparison.OrdinalIgnoreCase
+            );
             var sortBy = parameters.SortBy?.Trim().ToLowerInvariant();
             var orderedQuery = ApplySaleSorting(query, sortBy, descending);
 
@@ -112,7 +133,7 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
                 Data = sales,
                 CurrentPage = page,
                 PageSize = pageSize,
-                TotalCount = totalCount
+                TotalCount = totalCount,
             };
         }
         catch (Exception ex)
@@ -125,7 +146,7 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
                 Data = [],
                 CurrentPage = page,
                 PageSize = pageSize,
-                TotalCount = 0
+                TotalCount = 0,
             };
         }
     }
@@ -140,12 +161,20 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
             await _db.Sales.AddAsync(entity, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);
 
+            // Reload the sale with related SaleItems and Categories
+            var createdSale = await _db
+                .Sales.AsNoTracking()
+                .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
+                .Include(s => s.Categories)
+                .FirstOrDefaultAsync(s => s.SaleId == entity.SaleId, cancellationToken);
+
             return new ApiResponseDto<Sale>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.Created,
                 ErrorMessage = string.Empty,
-                Data = entity,
+                Data = createdSale,
             };
         }
         catch (DbUpdateConcurrencyException)
@@ -190,12 +219,20 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
             _db.Sales.Update(entity);
             await _db.SaveChangesAsync(cancellationToken);
 
+            // Reload the sale with related SaleItems and Categories
+            var updatedSale = await _db
+                .Sales.AsNoTracking()
+                .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
+                .Include(s => s.Categories)
+                .FirstOrDefaultAsync(s => s.SaleId == entity.SaleId, cancellationToken);
+
             return new ApiResponseDto<Sale>
             {
                 RequestFailed = false,
                 ResponseCode = HttpStatusCode.OK,
                 ErrorMessage = string.Empty,
-                Data = entity,
+                Data = updatedSale,
             };
         }
         catch (DbUpdateConcurrencyException)
@@ -299,7 +336,8 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         {
             var sale = await _db
                 .Sales.AsNoTracking()
-                .Include(s => s.SaleItems).ThenInclude(si => si.Product)
+                .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
                 .Include(s => s.Categories)
                 .IgnoreQueryFilters() // Include deleted products
                 .FirstOrDefaultAsync(s => s.SaleId == id, cancellationToken);
@@ -308,8 +346,11 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
             if (sale != null && sale.SaleItems != null)
             {
                 var saleDate = sale.SaleDate;
-                sale.SaleItems = sale.SaleItems
-                    .Where(si => si.Product != null && (!si.Product.IsDeleted || si.Product.DeletedAt > saleDate))
+                sale.SaleItems = sale
+                    .SaleItems.Where(si =>
+                        si.Product != null
+                        && (!si.Product.IsDeleted || si.Product.DeletedAt > saleDate)
+                    )
                     .ToList();
             }
 
@@ -341,7 +382,8 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
         {
             var list = await _db
                 .Sales.AsNoTracking()
-                .Include(s => s.SaleItems).ThenInclude(si => si.Product)
+                .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
                 .Include(s => s.Categories)
                 .IgnoreQueryFilters() // Include deleted products
                 .ToListAsync(cancellationToken);
@@ -352,8 +394,11 @@ public class SaleRepository(ECommerceDbContext db) : ISaleRepository
                 if (sale.SaleItems != null)
                 {
                     var saleDate = sale.SaleDate;
-                    sale.SaleItems = sale.SaleItems
-                        .Where(si => si.Product != null && (!si.Product.IsDeleted || si.Product.DeletedAt > saleDate))
+                    sale.SaleItems = sale
+                        .SaleItems.Where(si =>
+                            si.Product != null
+                            && (!si.Product.IsDeleted || si.Product.DeletedAt > saleDate)
+                        )
                         .ToList();
                 }
             }

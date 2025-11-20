@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ECommerceApp.RyanW84.Data.Models;
 
@@ -13,5 +15,8 @@ public class Sale
 
     // sale has many items (each item references a product)
     public ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
+
+    // Don't serialize Categories to avoid circular references
+    [JsonIgnore]
     public ICollection<Category> Categories { get; set; } = new List<Category>();
 }

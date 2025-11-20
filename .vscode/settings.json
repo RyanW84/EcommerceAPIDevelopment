@@ -87,6 +87,7 @@
         "createdon",
         "customername",
         "datetimeoffset",
+        "Dtos",
         "Ecommerce",
         "Hsts",
         "latestsqlcmd",

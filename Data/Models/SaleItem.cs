@@ -1,8 +1,13 @@
+using System.Text.Json.Serialization;
+
 namespace ECommerceApp.RyanW84.Data.Models;
 
 public class SaleItem
 {
     public int SaleId { get; set; }
+
+    // Don't serialize Sale to avoid circular references
+    [JsonIgnore]
     public Sale? Sale { get; set; }
 
     public int ProductId { get; set; }

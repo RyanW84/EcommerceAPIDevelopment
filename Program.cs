@@ -28,14 +28,9 @@ public class Program
             .Services.AddControllers()
             .AddJsonOptions(options =>
             {
-                // Handle circular references
-                options.JsonSerializerOptions.ReferenceHandler = System
-                    .Text
-                    .Json
-                    .Serialization
-                    .ReferenceHandler
-                    .Preserve;
-                // Optional: Make JSON more readable
+                // Make property names case-insensitive for incoming requests
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                // Make JSON more readable
                 options.JsonSerializerOptions.WriteIndented = true;
             });
 

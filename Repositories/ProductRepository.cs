@@ -21,12 +21,26 @@ namespace ECommerceApp.RyanW84.Repositories
             {
                 await _db.Products.AddAsync(entity, cancellationToken);
                 await _db.SaveChangesAsync(cancellationToken);
+
+                // Reload the product with related Category using explicit queries to ensure fresh data
+                var createdProduct = await _db
+                    .Products.Where(p => p.ProductId == entity.ProductId)
+                    .Include(p => p.Category)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                // DEBUG: Log what we got back
+                var categoryLoaded = createdProduct?.Category != null;
+                var categoryName = createdProduct?.Category?.Name ?? "NULL";
+                System.Diagnostics.Debug.WriteLine(
+                    $"[AddAsync] Product {createdProduct?.ProductId}: CategoryId={createdProduct?.CategoryId}, Category Loaded={categoryLoaded}, Category Name={categoryName}"
+                );
+
                 return new ApiResponseDto<Product>
                 {
                     RequestFailed = false,
                     ResponseCode = HttpStatusCode.Created,
                     ErrorMessage = string.Empty,
-                    Data = entity,
+                    Data = createdProduct,
                 };
             }
             catch (DbUpdateException ex)
@@ -110,7 +124,11 @@ namespace ECommerceApp.RyanW84.Repositories
 
             try
             {
-                var query = _db.Products.AsNoTracking().Include(p => p.Category).AsQueryable();
+                var query = _db
+                    .Products.Include(p => p.Category)
+                    .Where(p => !p.IsDeleted)
+                    .AsNoTracking()
+                    .AsQueryable();
 
                 var search = parameters.Search?.Trim();
                 if (!string.IsNullOrEmpty(search))
@@ -151,6 +169,16 @@ namespace ECommerceApp.RyanW84.Repositories
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync(cancellationToken);
+
+                // DEBUG: Log products returned
+                foreach (var p in products)
+                {
+                    var categoryLoaded = p.Category != null;
+                    var categoryName = p.Category?.Name ?? "NULL";
+                    System.Diagnostics.Debug.WriteLine(
+                        $"[GetAllProductsAsync] Product {p.ProductId}: CategoryId={p.CategoryId}, Category Loaded={categoryLoaded}, Category Name={categoryName}"
+                    );
+                }
 
                 return new PaginatedResponseDto<List<Product>>
                 {
@@ -199,8 +227,8 @@ namespace ECommerceApp.RyanW84.Repositories
                     ? query.OrderByDescending(p => p.Stock)
                     : query.OrderBy(p => p.Stock),
                 "category" => descending
-                    ? query.OrderByDescending(p => p.Category.Name)
-                    : query.OrderBy(p => p.Category.Name),
+                    ? query.OrderByDescending(p => p.Category!.Name)
+                    : query.OrderBy(p => p.Category!.Name),
                 _ => descending
                     ? query.OrderByDescending(p => p.ProductId)
                     : query.OrderBy(p => p.ProductId),
@@ -270,12 +298,19 @@ namespace ECommerceApp.RyanW84.Repositories
                 // Note: Price is preserved in the service layer
 
                 await _db.SaveChangesAsync(cancellationToken);
+
+                // Reload the product with related Category to return updated data
+                var updatedProduct = await _db
+                    .Products.Where(p => p.ProductId == existing.ProductId)
+                    .Include(p => p.Category)
+                    .FirstOrDefaultAsync(cancellationToken);
+
                 return new ApiResponseDto<Product>
                 {
                     RequestFailed = false,
                     ResponseCode = HttpStatusCode.OK,
                     ErrorMessage = string.Empty,
-                    Data = existing,
+                    Data = updatedProduct,
                 };
             }
             catch (DbUpdateConcurrencyException)
